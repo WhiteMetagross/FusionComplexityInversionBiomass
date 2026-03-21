@@ -1,0 +1,43 @@
+# Python.
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Model checkpoints and weights (large binary files).
+*.pth
+*.pt
+*.ckpt
+pretrained/
+
+# Training output directories.
+output/
+
+# Archives and compressed files.
+*.zip
+*.tar.gz
+*.tar
+*.gz
+
+# Dataset files.
+csiro-biomass/
+
+# IDE and system files.
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files.
+*.log
+*.txt
+/tmp/
+
+# Cache directories.
+.cache/
+.ipynb_checkpoints/
