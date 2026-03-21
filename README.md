@@ -49,6 +49,10 @@ FusionComplexityInversionBiomass/
 │   └── utils/
 │       ├── count_params.py         # Parameter counting utility.
 │       └── setup_deps.sh           # One-time dependency setup script.
+├── analysis/                       # Dataset analysis and visualization scripts.
+│   ├── dataset_analysis*.py        # Exploratory Data Analysis (EDA) scripts.
+│   ├── generate_tsne_figure.py     # Feature space t-SNE visualizations.
+│   └── generate_paper_figures.py   # Scripts to generate paper figures.
 ├── experiments/                    # Experiment configuration scripts.
 │   ├── baselines/                  # B1-B6 baseline configurations.
 │   ├── ablation/                   # E1-E8 and A1-A6 ablation studies.

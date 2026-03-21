@@ -30,7 +30,15 @@ This document provides a file-level index of every component in the repository, 
 
 ---
 
-## 2. Experiment Configurations (`experiments/`):
+## 2. Dataset Analysis (`analysis/`):
+
+- **`dataset_analysis.py`, `dataset_analysis_v2.py`, `dataset_analysis_v3.py`:** Exploratory Data Analysis (EDA) scripts used to evaluate distributions, relationships, and feature importance.
+- **`extract_feature_maps.py`, `analyze_tsne.py`, `generate_tsne_figure.py`:** Utilities to extract DINOv2 and VMamba backbone features and generate high-quality t-SNE mapping visualizations.
+- **`generate_paper_figures.py`, `generate_architecture_diagram.py`:** Scripts to programmatically compile and layout the visualizations and architecture diagrams used in the study.
+
+---
+
+## 3. Experiment Configurations (`experiments/`):
 
 ### Baselines (`experiments/baselines/`):
 
