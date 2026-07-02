@@ -4,6 +4,13 @@
 
 **Paper:** [arXiv:2603.07819](https://arxiv.org/abs/2603.07819)
 
+### The Pre-Trained Models (bundled as series A, B, E1 and E2 based on the results of the research work):
+
+- Series A: https://www.kaggle.com/models/redzapdos123/a-series-biomass-models
+- Series B: https://www.kaggle.com/models/redzapdos123/b-series-biomass-models
+- Series E1: https://www.kaggle.com/models/redzapdos123/e-series-biomass-models-1
+- Series E2: https://www.kaggle.com/models/redzapdos123/e-series-biomass-models-2
+
 ---
 
 ## Overview:
