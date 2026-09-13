@@ -140,7 +140,7 @@ All experiments use **Stratified Group 5-Fold CV** through `sklearn.model_select
 
 The CSIRO Pasture Biomass benchmark is a 357-image dual-view dataset with laboratory-validated, component-wise ground truth for five biomass targets.
 
-The dataset is available through the [CSIRO Image2Biomass Kaggle competition](https://www.kaggle.com/competitions/csiro-image2biomass). It should be placed in a `csiro-biomass/` directory adjacent to this repository.
+The dataset is available through the [CSIRO Image2Biomass Kaggle competition](https://www.kaggle.com/competitions/csiro-image2biomass). Place it in `csiro-biomass/` at the repository root. The expected files are `csiro-biomass/train.csv` and `csiro-biomass/train/`.
 
 ![Target Distributions](img/fig02_target_distributions.png)
 
@@ -200,7 +200,7 @@ The dataset is available through the [CSIRO Image2Biomass Kaggle competition](ht
 - WSL Ubuntu with conda environment `mambahar` (Python 3.11, and PyTorch 2.5.1+cu121).
 - NVIDIA GPU with CUDA support (tested on RTX 4060 Laptop with 8 GB VRAM).
 - Required packages: `mamba_ssm`, `timm`, `scikit-learn`, `pandas`, `albumentations`, and `tqdm`.
-- Run `src/utils/setup_deps.sh` once to install VMamba and download pretrained weights.
+- From the repository root, run `bash src/utils/setup_deps.sh` once to install VMamba and download pretrained weights into `pretrained/`.
 
 See [Usage.md](Usage.md) for detailed execution instructions.
 

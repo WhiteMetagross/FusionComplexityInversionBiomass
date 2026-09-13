@@ -11,7 +11,7 @@ Change CFG.MODEL_NAME to switch between architectures:
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/ablation/ablation_a6_vmamba_vs_dinov2_cv.py
+    python experiments/ablation/ablation_a6_vmamba_vs_dinov2_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -20,7 +20,7 @@ Usage (WSL):
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelVMamba, BiomassModelTimm
 
@@ -36,8 +36,8 @@ class CFG:
     # Switch between 'vmamba_base' and DINOv2 for the ablation
     MODEL_NAME = 'vmamba_base'
     VMAMBA_VARIANT = 'vmamba_base'
-    MODEL_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'A6_VMamba_vs_DINOv2')
-    OUTPUT_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'A6_VMamba_vs_DINOv2')
+    MODEL_DIR = str(PROJ_ROOT / 'output' / 'A6_VMamba_vs_DINOv2')
+    OUTPUT_DIR = str(PROJ_ROOT / 'output' / 'A6_VMamba_vs_DINOv2')
 
     SEED = 17
     N_FOLDS = 5

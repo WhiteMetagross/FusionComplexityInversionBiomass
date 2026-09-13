@@ -10,7 +10,7 @@ is identical for both — TTA only affects validation-time prediction.
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/ablation/ablation_a5_tta_cv.py
+    python experiments/ablation/ablation_a5_tta_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -19,7 +19,7 @@ Usage (WSL):
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelTimm
 
@@ -76,7 +76,7 @@ if __name__ == '__main__':
         print(f"{'#'*60}")
 
         CFG.USE_TTA = use_tta
-        base_dir = PROJ_ROOT / 'local_training_cv' / 'output' / f'A5_TTA_{label}'
+        base_dir = PROJ_ROOT / 'output' / f'A5_TTA_{label}'
         CFG.MODEL_DIR = str(base_dir)
         CFG.OUTPUT_DIR = str(base_dir)
 

@@ -9,7 +9,7 @@ Uses mamba_ssm + triton + torch.compile for acceleration.
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/baselines/B6_VMamba_Base_Metadata_cv.py
+    python experiments/baselines/B6_VMamba_Base_Metadata_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -18,7 +18,7 @@ Usage (WSL):
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelVMamba
 
@@ -32,8 +32,8 @@ class CFG:
     TRAIN_IMAGE_DIR = str(DATA_DIR / 'train')
 
     MODEL_NAME = 'vmamba_base'
-    MODEL_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'B6_VMamba_Base')
-    OUTPUT_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'B6_VMamba_Base')
+    MODEL_DIR = str(PROJ_ROOT / 'output' / 'B6_VMamba_Base')
+    OUTPUT_DIR = str(PROJ_ROOT / 'output' / 'B6_VMamba_Base')
 
     SEED = 17
     N_FOLDS = 5

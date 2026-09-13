@@ -8,10 +8,11 @@ Extracts feature norm maps from 3 backbones for 4 diverse images.
 Uses feature norms (not CLS attention) for consistent, reliable activation maps.
 
 Run in WSL:  source ~/miniconda3/etc/profile.d/conda.sh && conda activate mambahar
-             python extract_feature_maps.py
+             python analysis/extract_feature_maps.py
 """
 
 import os, sys, warnings, gc
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
@@ -29,13 +30,14 @@ from albumentations.pytorch import ToTensorV2
 
 warnings.filterwarnings("ignore")
 
-# ── Paths (WSL mount) ───────────────────────────────────────────────────────
-BASE     = "/mnt/c/Users/Xeron/Desktop/ProjectBioMass/csiro-biomass"
-PROJ     = "/mnt/c/Users/Xeron/Desktop/ProjectBioMass"
+# ── Paths ───────────────────────────────────────────────────────────────────
+REPO_ROOT = Path(__file__).resolve().parents[1]
+BASE = str(REPO_ROOT / "csiro-biomass")
+PROJ = str(REPO_ROOT)
 TRAIN_DIR = os.path.join(BASE, "train")
-WEIGHTS  = "/mnt/c/Users/Xeron/Desktop/ProjectBioMass/local_training_cv/pretrained"
-OUT_PNG  = os.path.join(PROJ, "figures", "png")
-OUT_SVG  = os.path.join(PROJ, "figures", "svg")
+WEIGHTS = str(REPO_ROOT / "pretrained")
+OUT_PNG = os.path.join(PROJ, "output", "analysis", "png")
+OUT_SVG = os.path.join(PROJ, "output", "analysis", "svg")
 os.makedirs(OUT_PNG, exist_ok=True)
 os.makedirs(OUT_SVG, exist_ok=True)
 

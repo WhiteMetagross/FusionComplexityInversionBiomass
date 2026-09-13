@@ -19,7 +19,7 @@ import torch.nn as nn
 import timm
 
 # Ensure local imports work
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models import (
     GatedDepthwiseConvBlock,

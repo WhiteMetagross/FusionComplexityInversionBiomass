@@ -10,7 +10,7 @@ If E8 < 0.819  → metadata hurts even without fusion.
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/ablation/E8_NoFusion_Meta_cv.py
+    python experiments/ablation/E8_NoFusion_Meta_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -19,7 +19,7 @@ Usage (WSL):
 import sys, os
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelTimm
 
@@ -34,8 +34,8 @@ class CFG:
 
     MODEL_NAME = 'vit_large_patch16_dinov3.lvd1689m'
 
-    MODEL_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'E8_NoFusion_Meta')
-    OUTPUT_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'E8_NoFusion_Meta')
+    MODEL_DIR = str(PROJ_ROOT / 'output' / 'E8_NoFusion_Meta')
+    OUTPUT_DIR = str(PROJ_ROOT / 'output' / 'E8_NoFusion_Meta')
 
     SEED = 17
     N_FOLDS = 5

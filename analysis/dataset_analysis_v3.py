@@ -9,6 +9,7 @@ Informed by Liao et al. (arXiv:2510.22916).
 """
 
 import os, warnings
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -22,10 +23,11 @@ from scipy import stats
 warnings.filterwarnings("ignore")
 
 # ── Paths ────────────────────────────────────────────────────────────────────
-BASE    = os.path.dirname(__file__)
-PROJECT = os.path.dirname(BASE)
-FIGDIR_PNG = os.path.join(PROJECT, "figures", "png")
-FIGDIR_SVG = os.path.join(PROJECT, "figures", "svg")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+BASE = str(REPO_ROOT / "csiro-biomass")
+PROJECT = str(REPO_ROOT)
+FIGDIR_PNG = os.path.join(PROJECT, "output", "analysis", "png")
+FIGDIR_SVG = os.path.join(PROJECT, "output", "analysis", "svg")
 TRAIN_DIR  = os.path.join(BASE, "train")
 os.makedirs(FIGDIR_PNG, exist_ok=True)
 os.makedirs(FIGDIR_SVG, exist_ok=True)

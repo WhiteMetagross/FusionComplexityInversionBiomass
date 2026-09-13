@@ -6,7 +6,7 @@ the training fold and uses it as prediction for all validation samples.
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/baselines/B1_Median_Predictor_cv.py
+    python experiments/baselines/B1_Median_Predictor_cv.py
 """
 
 # Author: Mridankan Mandal

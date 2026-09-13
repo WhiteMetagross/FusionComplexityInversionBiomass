@@ -11,7 +11,7 @@ Key advantages over GatedDepthwiseConv:
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/model/Proposed_DINOv3_ViT_L_CVGA_cv.py
+    python experiments/proposed/Proposed_DINOv3_ViT_L_CVGA_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -20,7 +20,7 @@ Usage (WSL):
 import sys, os, json
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelTimm
 
@@ -35,8 +35,8 @@ class CFG:
 
     MODEL_NAME = 'vit_large_patch16_dinov3.lvd1689m'
 
-    MODEL_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'Proposed_CVGA')
-    OUTPUT_DIR = os.path.join(BASE_PATH, 'local_training_cv/output/Proposed_CVGA')
+    MODEL_DIR = str(PROJ_ROOT / 'output' / 'Proposed_CVGA')
+    OUTPUT_DIR = str(PROJ_ROOT / 'output' / 'Proposed_CVGA')
 
     SEED = 17
     N_FOLDS = 5

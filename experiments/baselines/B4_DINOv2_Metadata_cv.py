@@ -14,7 +14,7 @@ too many graph breaks that make compile 8x slower than plain PyTorch.
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/baselines/B4_DINOv2_Metadata_cv.py
+    python experiments/baselines/B4_DINOv2_Metadata_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -23,7 +23,7 @@ Usage (WSL):
 import sys, os
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelTimm
 

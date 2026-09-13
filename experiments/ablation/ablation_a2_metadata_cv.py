@@ -9,7 +9,7 @@ Measures the performance delta from the metadata MLP stream.
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/ablation/ablation_a2_metadata_cv.py
+    python experiments/ablation/ablation_a2_metadata_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -18,7 +18,7 @@ Usage (WSL):
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelTimm
 
@@ -80,7 +80,7 @@ if __name__ == '__main__':
         print(f"{'#'*60}")
 
         CFG.USE_METADATA = use_meta
-        base_dir = PROJ_ROOT / 'local_training_cv' / 'output' / f'A2_Metadata_{label}'
+        base_dir = PROJ_ROOT / 'output' / f'A2_Metadata_{label}'
         CFG.MODEL_DIR = str(base_dir)
         CFG.OUTPUT_DIR = str(base_dir)
 

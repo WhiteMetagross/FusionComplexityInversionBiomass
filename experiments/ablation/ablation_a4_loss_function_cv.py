@@ -9,7 +9,7 @@ All other components remain identical.
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/ablation/ablation_a4_loss_function_cv.py
+    python experiments/ablation/ablation_a4_loss_function_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -18,7 +18,7 @@ Usage (WSL):
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelTimm
 
@@ -76,7 +76,7 @@ if __name__ == '__main__':
         print(f"{'#'*60}")
 
         CFG.LOSS_FN = loss_fn
-        base_dir = PROJ_ROOT / 'local_training_cv' / 'output' / f'A4_Loss_{label}'
+        base_dir = PROJ_ROOT / 'output' / f'A4_Loss_{label}'
         CFG.MODEL_DIR = str(base_dir)
         CFG.OUTPUT_DIR = str(base_dir)
 

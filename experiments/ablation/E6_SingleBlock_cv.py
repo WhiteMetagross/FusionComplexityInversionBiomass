@@ -7,7 +7,7 @@ the 2-block design.
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/ablation/E6_SingleBlock_cv.py
+    python experiments/ablation/E6_SingleBlock_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -16,7 +16,7 @@ Usage (WSL):
 import sys, os
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelTimm, GatedDepthwiseConvBlock
 
@@ -31,8 +31,8 @@ class CFG:
 
     MODEL_NAME = 'vit_large_patch16_dinov3.lvd1689m'
 
-    MODEL_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'E6_SingleBlock')
-    OUTPUT_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'E6_SingleBlock')
+    MODEL_DIR = str(PROJ_ROOT / 'output' / 'E6_SingleBlock')
+    OUTPUT_DIR = str(PROJ_ROOT / 'output' / 'E6_SingleBlock')
 
     SEED = 17
     N_FOLDS = 5

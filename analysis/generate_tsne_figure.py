@@ -10,10 +10,11 @@ t-SNE, and produces a 2×2 panel colored by Dry Total quintile.
 
 Run in WSL:
     source ~/miniconda3/etc/profile.d/conda.sh && conda activate mambahar
-    python generate_tsne_figure.py
+    python analysis/generate_tsne_figure.py
 """
 
 import os, sys, warnings, gc
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
@@ -31,16 +32,16 @@ from albumentations.pytorch import ToTensorV2
 warnings.filterwarnings("ignore")
 
 # ── Paths ────────────────────────────────────────────────────────────────────
-BASE     = "/mnt/c/Users/Xeron/Desktop/ProjectBioMass/csiro-biomass"
-PROJ     = "/mnt/c/Users/Xeron/Desktop/ProjectBioMass"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+BASE = str(REPO_ROOT / "csiro-biomass")
+PROJ = str(REPO_ROOT)
 TRAIN_DIR = os.path.join(BASE, "train")
-WEIGHTS  = "/mnt/c/Users/Xeron/Desktop/ProjectBioMass/local_training_cv/pretrained"
-
-# Output directories
-OUT_FIG_IMG  = os.path.join(PROJ, "figures", "img")
-OUT_PAPER_IMG = os.path.join(PROJ, "paper", "img")
-OUT_PNG      = os.path.join(PROJ, "figures", "png")
-OUT_SVG      = os.path.join(PROJ, "figures", "svg")
+WEIGHTS = str(REPO_ROOT / "pretrained")
+# Output directories.
+OUT_FIG_IMG = os.path.join(PROJ, "output", "analysis", "img")
+OUT_PAPER_IMG = os.path.join(PROJ, "output", "analysis", "paper")
+OUT_PNG = os.path.join(PROJ, "output", "analysis", "png")
+OUT_SVG = os.path.join(PROJ, "output", "analysis", "svg")
 for d in [OUT_FIG_IMG, OUT_PAPER_IMG, OUT_PNG, OUT_SVG]:
     os.makedirs(d, exist_ok=True)
 
@@ -156,7 +157,6 @@ print(f"  EfficientNet-B3 features: {effnet_features.shape}")
 # ── Backbone 2: VMamba-Base ──────────────────────────────────────────────────
 print("\n[2/4] VMamba-Base ...")
 
-sys.path.insert(0, "/mnt/c/Users/Xeron/Desktop/ProjectBioMass/local_training_cv")
 from vmamba import VSSM
 
 _VSSM_V2_KWARGS = dict(

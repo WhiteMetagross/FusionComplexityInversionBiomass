@@ -283,16 +283,20 @@ def _make_head(nf, dropout):
 class BiomassModelTimm(nn.Module):
     """Dual-view biomass model with a timm backbone and optional Mamba SSM fusion."""
     def __init__(self, model_name, dropout=0.2, use_mamba_ssm=False, use_babymamba=False, use_biobabymamba=False, use_cvga=False, pretrained=True,
-                 use_metadata=False, meta_input_dim=23):
+                 use_metadata=False, meta_input_dim=23, img_size=None, freeze_backbone=False):
         super().__init__()
-        self.backbone = timm.create_model(
-            model_name, pretrained=pretrained,
-            num_classes=0, global_pool=''
-        )
-        if hasattr(self.backbone, 'set_grad_checkpointing'):
+        backbone_kwargs = dict(pretrained=pretrained, num_classes=0, global_pool='')
+        if img_size is not None and model_name.startswith('vit_'):
+            backbone_kwargs['img_size'] = img_size
+        self.backbone = timm.create_model(model_name, **backbone_kwargs)
+        self.freeze_backbone = freeze_backbone
+        if freeze_backbone:
+            self.backbone.requires_grad_(False)
+            self.backbone.eval()
+        elif hasattr(self.backbone, 'set_grad_checkpointing'):
             self.backbone.set_grad_checkpointing(True)
         nf = self.backbone.num_features
-        print(f"Backbone: {model_name}, features={nf}, grad_ckpt=True")
+        print(f"Backbone: {model_name}, features={nf}, frozen={freeze_backbone}")
 
         if use_cvga:
             FusionBlock = CVGABlock
@@ -338,9 +342,32 @@ class BiomassModelTimm(nn.Module):
         self.head_dead = _make_head(nf, dropout)
         self.head_clover = _make_head(nf, dropout)
 
+    @staticmethod
+    def _as_tokens(x):
+        if x.ndim == 4:
+            return x.flatten(2).transpose(1, 2)
+        if x.ndim == 2:
+            return x.unsqueeze(1)
+        if x.ndim != 3:
+            raise ValueError(f"Unsupported backbone feature shape: {tuple(x.shape)}")
+        return x
+
+    def train(self, mode=True):
+        super().train(mode)
+        if self.freeze_backbone:
+            self.backbone.eval()
+        return self
+
     def forward(self, left, right, metadata=None):
-        x_l = self.backbone(left)
-        x_r = self.backbone(right)
+        if self.freeze_backbone:
+            with torch.no_grad():
+                x_l = self.backbone(left)
+                x_r = self.backbone(right)
+        else:
+            x_l = self.backbone(left)
+            x_r = self.backbone(right)
+        x_l = self._as_tokens(x_l)
+        x_r = self._as_tokens(x_r)
         x = torch.cat([x_l, x_r], dim=1)
         x = self.fusion(x)
         x = self.pool(x.transpose(1, 2)).flatten(1)
@@ -361,7 +388,9 @@ class BiomassModelTimm(nn.Module):
 # VMamba backbone (uses vmamba.VSSM).
 # ──────────────────────────────────────────────────────────────────────
 
-_PRETRAINED_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pretrained')
+_PRETRAINED_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'pretrained'
+)
 
 # VMamba configs — tiny and small are v0 (vanilla) checkpoints, and base is v2.
 # Each carries the full VSSM constructor kwargs matching the pretrained weights.

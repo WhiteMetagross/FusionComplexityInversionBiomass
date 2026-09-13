@@ -131,6 +131,8 @@ def setup_environment(seed=17):
     torch.backends.cudnn.allow_tf32 = True
     torch.backends.cudnn.benchmark = True
     torch.set_float32_matmul_precision("high")
+    if hasattr(torch, '_inductor') and hasattr(torch._inductor, 'config'):
+        torch._inductor.config.compile_threads = 2
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"PyTorch: {torch.__version__}")
@@ -389,6 +391,7 @@ def train_one_epoch(model, loader, optimizer, scheduler, scaler, device, cfg):
 
 @torch.no_grad()
 def validate(model, loader, device, use_tta=False, use_metadata=False):
+    model = getattr(model, '_orig_mod', model)
     model.eval()
     all_preds, all_labels = [], []
 

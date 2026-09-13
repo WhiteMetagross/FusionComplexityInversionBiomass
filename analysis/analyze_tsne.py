@@ -8,8 +8,10 @@ from sklearn.metrics import silhouette_score
 from scipy.stats import spearmanr
 from scipy.spatial import ConvexHull
 import pandas as pd, os
+from pathlib import Path
 
-BASE = "/mnt/c/Users/Xeron/Desktop/ProjectBioMass/csiro-biomass"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+BASE = str(REPO_ROOT / "csiro-biomass")
 df = pd.read_csv(os.path.join(BASE, "train.csv"))
 pivot = df.pivot_table(
     index=["image_path","Sampling_Date","State","Species","Pre_GSHH_NDVI","Height_Ave_cm"],

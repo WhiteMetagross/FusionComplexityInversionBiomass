@@ -7,7 +7,7 @@ If E1 ≈ 0.90 → metadata was the culprit. If E1 ≈ 0.83 → fusion complexit
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/ablation/E1_BabyMamba_NoMeta_cv.py
+    python experiments/ablation/E1_BabyMamba_NoMeta_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -16,7 +16,7 @@ Usage (WSL):
 import sys, os
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelTimm
 
@@ -31,8 +31,8 @@ class CFG:
 
     MODEL_NAME = 'vit_large_patch16_dinov3.lvd1689m'
 
-    MODEL_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'E1_BabyMamba_NoMeta')
-    OUTPUT_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'E1_BabyMamba_NoMeta')
+    MODEL_DIR = str(PROJ_ROOT / 'output' / 'E1_BabyMamba_NoMeta')
+    OUTPUT_DIR = str(PROJ_ROOT / 'output' / 'E1_BabyMamba_NoMeta')
 
     SEED = 17
     N_FOLDS = 5

@@ -5,11 +5,12 @@
 CSIRO BioMass Dataset — Research-Grade Exploratory Data Analysis
 ================================================================
 Produces publication-quality figures for the research paper.
-All plots saved as PNG (300 dpi) and SVG in ./figures/
+All plots are saved as PNG (300 dpi) and SVG in output/analysis/legacy/.
 """
 
 import os
 import warnings
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -57,7 +58,9 @@ TARGET_LABELS = {
     "GDM_g":        "GDM (g)",
 }
 
-FIGDIR = os.path.join(os.path.dirname(__file__), "figures")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = REPO_ROOT / "csiro-biomass"
+FIGDIR = str(REPO_ROOT / "output" / "analysis" / "legacy")
 os.makedirs(FIGDIR, exist_ok=True)
 
 def save(fig, name):
@@ -67,7 +70,7 @@ def save(fig, name):
     print(f"  ✓ {name}")
 
 # ── Load & prepare data ─────────────────────────────────────────────────────
-df = pd.read_csv(os.path.join(os.path.dirname(__file__), "train.csv"))
+df = pd.read_csv(DATA_DIR / "train.csv")
 df["Sampling_Date"] = pd.to_datetime(df["Sampling_Date"])
 df["Month"] = df["Sampling_Date"].dt.month
 df["MonthName"] = df["Sampling_Date"].dt.strftime("%b")
@@ -471,7 +474,7 @@ save(fig, "fig17_ecdf_dry_total")
 # ══════════════════════════════════════════════════════════════════════════════
 print("  Computing image color statistics (may take a moment) …")
 color_stats = []
-train_dir = os.path.join(os.path.dirname(__file__), "train")
+train_dir = str(DATA_DIR / "train")
 for _, row in pivot.iterrows():
     img_name = os.path.basename(row["image_path"])
     img_path = os.path.join(train_dir, img_name)

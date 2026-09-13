@@ -4,12 +4,12 @@
 #
 # Usage (WSL):
 #   conda activate mambahar
-#   bash local_training_cv/setup_deps.sh
+#   bash src/utils/setup_deps.sh
 # ============================================================
 
 set -e
-PROJ_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-CACHE_DIR="$PROJ_ROOT/local_training_cv/pretrained"
+PROJ_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+CACHE_DIR="$PROJ_ROOT/pretrained"
 mkdir -p "$CACHE_DIR"
 
 echo "============================================================"
@@ -30,11 +30,11 @@ python -c "from vmamba import VSSM; print('[OK] VMamba VSSM import works')" || {
 
 # ── 2. Ensure other deps ──────────────────────────────────────
 echo -e "\n>>> Checking other Python deps..."
-pip install -q albumentations timm huggingface_hub safetensors tqdm scikit-learn
+python -m pip install -q albumentations timm huggingface_hub safetensors tqdm scikit-learn
 
 # ── 3. Download VMamba pretrained weights (GitHub releases) ────
 echo -e "\n>>> Downloading VMamba pretrained weights..."
-CACHE_DIR="${CACHE_DIR:-$PROJ_ROOT/local_training_cv/pretrained}"
+CACHE_DIR="${CACHE_DIR:-$PROJ_ROOT/pretrained}"
 mkdir -p "$CACHE_DIR"
 
 declare -A WEIGHTS

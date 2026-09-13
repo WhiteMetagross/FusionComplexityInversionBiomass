@@ -12,6 +12,8 @@ This document provides a file-level index of every component in the repository, 
 
 - **`engine.py`:** Complete training engine providing `setup_environment()`, `load_train_data()` (StratifiedGroupKFold), `prepare_image_cache()` (WSL filesystem optimization), `BiomassDataset` (dual-view dataset with optional metadata), `train_one_epoch()` (with gradient accumulation and metadata dropout), `validate()` (with optional test-time augmentation), `train_fold()` (with checkpoint resume), and `run_cv()` (full K-fold cross-validation with automatic resume support). Uses mixed precision through `torch.amp.autocast`, `torch.compile` with inductor backend, and `GradScaler`.
 
+- **`frozen_probe.py`:** Offline feature extraction and supervised frozen probe cross-validation harness for foundation models (DINOv2 Base and Giant). Caches CLS token embeddings in FP16 with PyTorch SDPA, partitions inner folds for early stopping, and evaluates linear and nonlinear probes on held-out outer validation splits.
+
 - **`models.py`:** All neural network architectures used in the study.
   - `GatedDepthwiseConvBlock`: Gated depthwise-conv fusion block for local spatial feature mixing (baselines B4, and B5).
   - `MambaFusionBlock`: Hardware-accelerated Mamba SSM fusion block using `mamba_ssm` with custom CUDA kernels (B6, and ablations A1-A6). Decorated with `@torch.compiler.disable`.
@@ -43,11 +45,12 @@ This document provides a file-level index of every component in the repository, 
 ### Baselines (`experiments/baselines/`):
 
 - **`B1_Median_Predictor_cv.py`:** Median predictor baseline (CPU only). Computes the global training median as the prediction for all validation samples.
-- **`B2_EfficientNet_B3_cv.py`:** EfficientNet-B3 CNN baseline using timm pretrained weights (batch_size=12).
+- **`B2_EfficientNet_B3_cv.py`:** EfficientNet-B3 CNN baseline under matched dual-view protocol (batch_size=8, image size 448px, 2x GatedDWConv fusion, compositional output head, raw target Huber loss).
 - **`B3_DINOv2_Giant_cv.py`:** DINOv2-Giant zero-shot feature probing baseline (batch_size=3).
 - **`B4_DINOv2_Metadata_cv.py`:** DINOv2-Large backbone with GatedDepthwiseConv fusion (batch_size=4, and image size 518px). Resumes from Kaggle checkpoints for folds 0-1.
 - **`B5_DINOv3_ViT_L_Metadata_cv.py`:** DINOv3-ViT-L backbone with GatedDepthwiseConv fusion (batch_size=4, and image size 512px).
 - **`B6_VMamba_Base_Metadata_cv.py`:** VMamba-Base v2 backbone with MambaFusionBlock fusion (batch_size=4, grad_accum=2).
+- **`B10_DINOv2_Giant_cv.py`:** Official `facebook/dinov2-giant` frozen dual-view supervised probe baseline (dim 3072, batch size 1 in fp16 with SDPA) with automatic fallback handling to `facebook/dinov2-large`.
 
 ### Proposed Models (`experiments/proposed/`):
 
@@ -80,7 +83,7 @@ These experiments evaluate backbone scale, training strategy, and augmentation c
 
 ---
 
-## 3. Kaggle Notebooks (`notebooks/`):
+## 4. Kaggle Notebooks (`notebooks/`):
 
 ### Training Notebooks (`notebooks/training/`):
 
@@ -131,7 +134,14 @@ These notebooks generate inference predictions and submission files for the Kagg
 
 ---
 
-## 4. Figures (`img/`):
+## 5. Regression Tests (`tests/`):
+
+- **`test_repository_paths.py`:** Tests verifying dataset and repository directory resolution and file existence.
+- **`test_rerun_protocols.py`:** Tests validating protocol configuration, fold definitions, and parameter integrity.
+
+---
+
+## 6. Figures (`img/`):
 
 All figures used in the research paper are stored here.
 

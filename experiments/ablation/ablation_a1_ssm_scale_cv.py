@@ -9,7 +9,7 @@ Uses mamba_ssm + triton for hardware-accelerated SSM fusion.
 
 Usage (WSL):
     conda activate mambahar
-    python local_training_cv/ablation/ablation_a1_ssm_scale_cv.py
+    python experiments/ablation/ablation_a1_ssm_scale_cv.py
 """
 
 # Author: Mridankan Mandal
@@ -18,7 +18,7 @@ Usage (WSL):
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 from engine import run_cv
 from models import BiomassModelVMamba
 
@@ -33,8 +33,8 @@ class CFG:
 
     MODEL_NAME = 'vmamba_base'          # Updated per-variant in the sweep loop
     VMAMBA_VARIANT = 'vmamba_base'      # Updated per-variant in the sweep loop
-    MODEL_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'A1_SSM_Scale')
-    OUTPUT_DIR = str(PROJ_ROOT / 'local_training_cv' / 'output' / 'A1_SSM_Scale')
+    MODEL_DIR = str(PROJ_ROOT / 'output' / 'A1_SSM_Scale')
+    OUTPUT_DIR = str(PROJ_ROOT / 'output' / 'A1_SSM_Scale')
 
     SEED = 17
     N_FOLDS = 5
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         # Update CFG for this variant
         CFG.MODEL_NAME = variant
         CFG.VMAMBA_VARIANT = variant
-        base_dir = PROJ_ROOT / 'local_training_cv' / 'output' / f'A1_SSM_Scale_{variant}'
+        base_dir = PROJ_ROOT / 'output' / f'A1_SSM_Scale_{variant}'
         CFG.MODEL_DIR = str(base_dir)
         CFG.OUTPUT_DIR = str(base_dir)
 

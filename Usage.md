@@ -48,19 +48,30 @@ The notebooks are independent, but it is scientifically rigorous to run `B4_DINO
 
 ### One-Time Setup:
 
+Open WSL, enter the cloned repository, and run:
+
 ```bash
-# Install VMamba module and download pretrained weights.
-wsl -d Ubuntu -- bash -c "source ~/miniconda3/etc/profile.d/conda.sh ; conda activate mambahar ; cd /mnt/c/Users/Xeron/Desktop/ProjectBioMass ; bash src/utils/setup_deps.sh"
+cd /mnt/c/path/to/FusionComplexityInversionBiomass
+conda run --no-capture-output -n mambahar bash src/utils/setup_deps.sh
 ```
 
 This command installs `vmamba.py` into the conda site-packages, downloads four VMamba pretrained weights to `pretrained/`, and pre-caches all timm backbone models.
 
 ### Running Individual Experiments:
 
-From PowerShell, prefix each command with the WSL conda activation.
+Run experiments from the cloned repository root. Replace `<script>` with a path from the tables below.
 
 ```bash
-wsl -d Ubuntu -- bash -c "source ~/miniconda3/etc/profile.d/conda.sh ; conda activate mambahar ; cd /mnt/c/path/to/repo ; python <script>"
+cd /mnt/c/path/to/FusionComplexityInversionBiomass
+conda run --no-capture-output -n mambahar python <script>
+```
+
+Training data must exist at `csiro-biomass/train.csv` and `csiro-biomass/train/`. Checkpoints and summaries are written below `output/`. VMamba weights are read from `pretrained/`.
+
+Run the dependency free path smoke tests before training:
+
+```bash
+conda run --no-capture-output -n mambahar python tests/test_repository_paths.py -v
 ```
 
 **Baselines (B1-B6):**
