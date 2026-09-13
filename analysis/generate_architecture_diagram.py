@@ -8,9 +8,17 @@ Fig: Full pipeline (top) + 4 fusion block internals (bottom).
 Clean, professional research-grade aesthetic using matplotlib.
 
 Usage:
-    python figures/generate_architecture_diagram.py
+    python analysis/generate_architecture_diagram.py
+    python analysis/generate_architecture_diagram.py --recompute-draft
+
+The published diagram includes a final Inkscape layout pass. The default mode
+exports that exact SVG and PNG master. ``--recompute-draft`` redraws the
+editable Matplotlib draft, which is not pixel identical to the paper asset.
 """
 
+import argparse
+import os
+import shutil
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -18,11 +26,17 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 from pathlib import Path
 
-OUT_DIR = Path(__file__).parent
+REPO_ROOT = Path(__file__).resolve().parents[1]
+OUT_DIR = Path(os.environ.get(
+    'PAPER_FIGURE_OUTPUT_DIR', REPO_ROOT / 'output' / 'analysis'
+))
 PNG_DIR = OUT_DIR / 'png'
 SVG_DIR = OUT_DIR / 'svg'
-PNG_DIR.mkdir(exist_ok=True)
-SVG_DIR.mkdir(exist_ok=True)
+PNG_DIR.mkdir(parents=True, exist_ok=True)
+SVG_DIR.mkdir(parents=True, exist_ok=True)
+CANONICAL_ASSET_DIR = Path(os.environ.get(
+    'PAPER_FIGURE_ASSET_DIR', REPO_ROOT / 'img'
+))
 
 # ── Vibrant, high-saturation palette ──────────────────────────────────
 C_INPUT     = '#42A5F5'   # bright blue — inputs
@@ -542,6 +556,29 @@ def make_architecture_figure():
     plt.close()
 
 
+def export_exact_architecture() -> None:
+    """Export the reviewed postprocessed architecture assets byte for byte."""
+    for suffix, destination in (('png', PNG_DIR), ('svg', SVG_DIR)):
+        source = CANONICAL_ASSET_DIR / f'fig_architecture.{suffix}'
+        if not source.is_file():
+            raise FileNotFoundError(f'Missing canonical architecture asset: {source}')
+        shutil.copyfile(source, destination / source.name)
+    print('  Exported exact master: fig_architecture.png, fig_architecture.svg')
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        '--recompute-draft', action='store_true',
+        help='Redraw the pre-Inkscape Matplotlib draft instead of exporting the exact master.',
+    )
+    return parser.parse_args()
+
+
 if __name__ == '__main__':
-    make_architecture_figure()
+    args = parse_args()
+    if args.recompute_draft:
+        make_architecture_figure()
+    else:
+        export_exact_architecture()
     print('\nDone!')

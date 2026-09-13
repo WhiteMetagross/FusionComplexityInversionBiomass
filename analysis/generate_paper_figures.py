@@ -12,9 +12,10 @@ Generates 3 multi-panel figures:
   fig_fold_analysis.png/svg    — (a) Per-fold grouped bars, (b) Violin + strip plots
 
 Usage:
-    python figures/generate_paper_figures.py
+    python analysis/generate_paper_figures.py
 """
 
+import os
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -26,11 +27,14 @@ import pandas as pd
 from pathlib import Path
 
 # ── Output directory ──────────────────────────────────────────────────
-OUT_DIR = Path(__file__).parent
+REPO_ROOT = Path(__file__).resolve().parents[1]
+OUT_DIR = Path(os.environ.get(
+    'PAPER_FIGURE_OUTPUT_DIR', REPO_ROOT / 'output' / 'analysis'
+))
 PNG_DIR = OUT_DIR / 'png'
 SVG_DIR = OUT_DIR / 'svg'
-PNG_DIR.mkdir(exist_ok=True)
-SVG_DIR.mkdir(exist_ok=True)
+PNG_DIR.mkdir(parents=True, exist_ok=True)
+SVG_DIR.mkdir(parents=True, exist_ok=True)
 
 # ── Global style ──────────────────────────────────────────────────────
 plt.rcParams.update({
@@ -549,4 +553,4 @@ if __name__ == '__main__':
     make_fig_main_results()
     make_fig_ablation_studies()
     make_fig_fold_analysis()
-    print('\nDone! All figures saved to figures/png/ and figures/svg/')
+    print(f'\nDone! All figures saved to {PNG_DIR} and {SVG_DIR}')

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "source": "Exact figure assets embedded in arXiv:2603.07819v5",
+  "figures": [
+    {"name": "fig_architecture", "width": 7878, "height": 3533, "png_sha256": "edf74145ae978ead87e817fa24d9846ddccaa5716e05f571f8f3e3f973515c53", "svg_sha256": "ffe45ded8ffafa14fd2c286a8a24a10285a00e4631624124fd9572af70fd7c44", "generator": "generate_architecture_diagram.py plus final Inkscape layout"},
+    {"name": "fig02_target_distributions", "width": 6564, "height": 2781, "png_sha256": "8f8e8a901f49849369e7b643b28f6385e5f7086f98aa67225923ef14dceff904", "svg_sha256": "d79d1e8f5fd5f05ed6188bf2e77e29c4819b8cdcb6bae72b7ec93680c2868a28", "generator": "dataset_analysis_v3.py"},
+    {"name": "fig03_correlation_heatmap", "width": 2892, "height": 2560, "png_sha256": "fa8c1435675637ca88590b73f0b0505dfba223d858ce4b8bd7c55db1b19257cc", "svg_sha256": "0f0d995a8b390fd72322a8c5bc96610f6e6bc8836bc064f3ed791a8b3f417c8e", "generator": "dataset_analysis_v3.py"},
+    {"name": "fig04_ndvi_height_biomass", "width": 4465, "height": 3699, "png_sha256": "c02136eef1498e9526d394cfa7d3a63c12f199a18f7c1f076fdb334881de2a94", "svg_sha256": "0f16f4c3be07415773a17d7984f0a240c1901730f0a3558fc93bc9b49e2641bf", "generator": "dataset_analysis_v3.py"},
+    {"name": "fig05_biomass_by_state", "width": 4460, "height": 3141, "png_sha256": "611c774c27f96606b111751fcaf909a1cc0c7e9eb00ec2a09589235eebf7ba4f", "svg_sha256": "1ccf0af028192e83d11da30b95535c1080d17c947db1cbe55ed2540144d683bd", "generator": "dataset_analysis_v3.py with unseeded strip jitter"},
+    {"name": "fig06_seasonal_dynamics", "width": 5365, "height": 1727, "png_sha256": "4433a935da2772954b98cd513d214431cf7dc5c79851740d4611f77e143327d9", "svg_sha256": "631a10bd3afb11e8a6c22364256432b995f8ea7fe112e61630b5d136aa15fb72", "generator": "dataset_analysis_v3.py"},
+    {"name": "fig07_species_analysis", "width": 5233, "height": 2007, "png_sha256": "196c9046a25c6b68e68a43d8c30bbbe4cbfd5086a5c924f5d4c0daedcb076295", "svg_sha256": "e60b9dec18b53d14749d0a4b1ae93d37a1417c7030c25a3f083db1ae6bcf3a3d", "generator": "dataset_analysis_v3.py"},
+    {"name": "fig_main_results", "width": 3390, "height": 1290, "png_sha256": "c623a2e140e5ef82c415da16034dce6913c3e8cd12d2424bf7be3953aa0d3d34", "svg_sha256": "34b68e054f5d007882dfc04ad054c8d6a64c70b0a635d7115a8b448abdbd2150", "generator": "generate_paper_figures.py"},
+    {"name": "fig_ablation_studies", "width": 4440, "height": 1290, "png_sha256": "014f6a0441b881f4fa41d5b0d8069a6aefeafdca0068fdfed9c35d60d54d6023", "svg_sha256": "9002ef2292c2b0372549975200940a3197ebe7483ad6eb269230fc9588a8ac76", "generator": "generate_paper_figures.py"},
+    {"name": "fig08_feature_space_analysis", "width": 4460, "height": 3240, "png_sha256": "3af0accdc03669b4f8512037803f83e63c38e00dfbd4769c312e8fcffbf39eea", "svg_sha256": "9e03248bc6d94525f8bec7f1ca60d6c01241c96d3ce0e7b3d880fbfea785cfcb", "generator": "dataset_analysis_v3.py"},
+    {"name": "fig11_backbone_feature_maps", "width": 4331, "height": 4566, "png_sha256": "6d5f3f7b8dd67beeff286b031490bbbd552c7494881fd26be3adc1af2cc95060", "svg_sha256": "83a4211316cf0902554ecff029c39b10d7f097c2ce69294969aad4f0a7b751d3", "generator": "extract_feature_maps.py"},
+    {"name": "fig_fold_analysis", "width": 3239, "height": 1290, "png_sha256": "802a4bba254e2859fd0ee20fb24adf5e4ebb8622022676e4551709e0054b5eef", "svg_sha256": "649431f39af6dd10deda4793ad392073992c3fc577b8d4286cb7337bdd8a9777", "generator": "generate_paper_figures.py"},
+    {"name": "fig09_evaluation_quality", "width": 4447, "height": 2968, "png_sha256": "7a018eac869a4ccbb3d7c87fd6577a9bf33be3f8d27a55f5744a148d7802d06e", "svg_sha256": "f141caf45439a26f38b1e3a95e54e3810d539d6a4d8ee71a8c6ba83a6e584451", "generator": "dataset_analysis_v3.py"}
+  ]
+}

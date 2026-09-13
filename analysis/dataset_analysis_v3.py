@@ -8,7 +8,7 @@ Informed by Liao et al. (arXiv:2510.22916).
 10 figures total (merged panels), saved as PNG and SVG.
 """
 
-import os, warnings
+import os, shutil, warnings
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -24,10 +24,15 @@ warnings.filterwarnings("ignore")
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 REPO_ROOT = Path(__file__).resolve().parents[1]
-BASE = str(REPO_ROOT / "csiro-biomass")
-PROJECT = str(REPO_ROOT)
-FIGDIR_PNG = os.path.join(PROJECT, "output", "analysis", "png")
-FIGDIR_SVG = os.path.join(PROJECT, "output", "analysis", "svg")
+BASE = str(Path(os.environ.get("BIOMASS_DATA_DIR", REPO_ROOT / "csiro-biomass")))
+OUTPUT_ROOT = Path(os.environ.get(
+    "PAPER_FIGURE_OUTPUT_DIR", REPO_ROOT / "output" / "analysis"
+))
+FIGDIR_PNG = str(OUTPUT_ROOT / "png")
+FIGDIR_SVG = str(OUTPUT_ROOT / "svg")
+CANONICAL_ASSET_DIR = Path(os.environ.get(
+    "PAPER_FIGURE_ASSET_DIR", REPO_ROOT / "img"
+))
 TRAIN_DIR  = os.path.join(BASE, "train")
 os.makedirs(FIGDIR_PNG, exist_ok=True)
 os.makedirs(FIGDIR_SVG, exist_ok=True)
@@ -65,6 +70,21 @@ def short_species(name):
     return name.replace("_", " ")
 
 def save(fig, name):
+    # The published state figure used unseeded Seaborn strip jitter. Its exact
+    # offsets cannot be recomputed from the data. Preserve the reviewed vector
+    # and raster masters unless an exploratory rerun is explicitly requested.
+    if name == "fig05_biomass_by_state" and os.environ.get(
+        "PAPER_FIGURE_RECOMPUTE_UNSEEDED_JITTER", "0"
+    ) != "1":
+        plt.close(fig)
+        shutil.copyfile(
+            CANONICAL_ASSET_DIR / f"{name}.png", Path(FIGDIR_PNG) / f"{name}.png"
+        )
+        shutil.copyfile(
+            CANONICAL_ASSET_DIR / f"{name}.svg", Path(FIGDIR_SVG) / f"{name}.svg"
+        )
+        print(f"  [EXACT MASTER] {name}")
+        return
     fig.savefig(os.path.join(FIGDIR_PNG, f"{name}.png"))
     fig.savefig(os.path.join(FIGDIR_SVG, f"{name}.svg"))
     plt.close(fig)
