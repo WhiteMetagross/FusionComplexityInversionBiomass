@@ -1,16 +1,14 @@
 """
-Baseline 6: VMamba-Base + Mamba SSM Fusion with Metadata (5-Fold CV).
+B9: VMamba Base plus two Mamba fusion blocks without metadata.
 
-Architecture:
-  - Backbone: VMamba-Base (v2 s2l15, 1024-d)
-  - Fusion: 2x MambaFusionBlock (dim 1024, dropout 0.2)
-  - Metadata: Enabled (23 features through meta_mlp and meta_proj)
-  - Input resolution: 512 x 512 per view (dual view)
-  - Fixed 5-fold CV using output/reruns_2026_09_13/folds_seed17.csv
+This is the dedicated reproduction entry point for paper baseline B9. The old
+A6 script could instantiate this architecture, but mixed two backbone choices
+under one ablation output directory and did not identify B9 explicitly.
 
-Usage (WSL):
-    conda activate mambahar
-    python experiments/baselines/B6_VMamba_Base_Metadata_cv.py
+Run inside WSL with the project Conda environment:
+    BIOMASS_DATA_DIR=/path/to/csiro-biomass \
+    conda run --no-capture-output -n mambahar \
+    python experiments/baselines/B9_VMamba_Base_NoMetadata_cv.py
 """
 
 import os
@@ -31,12 +29,9 @@ from torch.utils.data import Dataset, DataLoader
 PROJ_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 
-from engine import (
-    load_train_data,
-    run_cv,
-    weighted_r2_score,
-)
+from engine import load_train_data, run_cv, weighted_r2_score
 from models import BiomassModelVMamba
+
 
 DATA_DIR = Path(os.environ.get("BIOMASS_DATA_DIR", PROJ_ROOT / "csiro-biomass"))
 RUN_ROOT = PROJ_ROOT / "output" / "reruns_2026_09_13"
@@ -51,18 +46,18 @@ class CFG:
 
     MODEL_NAME = "vmamba_base"
     VMAMBA_VARIANT = "vmamba_base"
-    MODEL_DIR = str(OUTPUT_ROOT / "B6_VMamba_Base_Mamba_Meta")
+    MODEL_DIR = str(OUTPUT_ROOT / "B9_VMamba_Base_Mamba_NoMeta")
     OUTPUT_DIR = MODEL_DIR
 
     SEED = 17
     N_FOLDS = 5
     FOLDS_TO_TRAIN = [0, 1, 2, 3, 4]
     CV_STRATEGY = "stratified_group"
-    USE_METADATA = True
+    USE_METADATA = False
 
     IMG_SIZE = 512
-    BATCH_SIZE = 2
-    GRAD_ACCUM_STEPS = 4
+    BATCH_SIZE = 4
+    GRAD_ACCUM_STEPS = 2
     NUM_WORKERS = 2
     EVAL_BATCH_SIZE = 16
     EVAL_NUM_WORKERS = 0
@@ -88,14 +83,12 @@ class CFG:
 
 
 def model_factory(cfg):
-    use_meta = getattr(cfg, "USE_METADATA", False)
-    meta_dim = getattr(cfg, "_META_DIM", 23)
     return BiomassModelVMamba(
         pretrained_path="",
         dropout=cfg.DROPOUT,
         use_mamba_ssm=True,
-        use_metadata=use_meta,
-        meta_input_dim=meta_dim,
+        use_metadata=False,
+        meta_input_dim=0,
         variant=cfg.VMAMBA_VARIANT,
     )
 
@@ -103,11 +96,10 @@ def model_factory(cfg):
 class CommonEvaluatorDataset(Dataset):
     """Use the image decoding and preprocessing of the unified evaluator."""
 
-    def __init__(self, df, image_dir, target_cols, meta_cols, transform):
+    def __init__(self, df, image_dir, target_cols, transform):
         self.df = df.reset_index(drop=True)
         self.image_dir = Path(image_dir)
         self.target_cols = target_cols
-        self.meta_cols = meta_cols
         self.transform = transform
 
     def __len__(self):
@@ -123,14 +115,8 @@ class CommonEvaluatorDataset(Dataset):
 
         left = self.transform(image=left)["image"]
         right = self.transform(image=right)["image"]
-        metadata = row[self.meta_cols].values.astype(np.float32)
         targets = row[self.target_cols].values.astype(np.float32)
-        return (
-            left,
-            right,
-            torch.tensor(metadata, dtype=torch.float32),
-            torch.tensor(targets, dtype=torch.float32),
-        )
+        return left, right, torch.tensor(targets, dtype=torch.float32)
 
 
 def get_common_eval_transform(img_size):
@@ -184,7 +170,7 @@ def main():
 
     CFG._CACHE_DIR = f"/tmp/biomass_cache_{CFG.IMG_SIZE}"
 
-    print("\nStarting B6 VMamba-Base 5-Fold Cross-Validation...")
+    print("\nStarting B9 VMamba-Base 5-Fold Cross-Validation...")
     # run_cv handles training or resume only. Metrics reported below come from the common evaluator protocol.
     run_cv(CFG, model_factory, use_compile=True)
 
@@ -194,8 +180,6 @@ def main():
     oof_targets = np.zeros((len(df), 5), dtype=np.float32)
     fold_details = []
 
-    meta_cols = getattr(CFG, "_META_COLS", None)
-
     for fold in range(CFG.N_FOLDS):
         val_idx = df[df["fold"] == fold].index.values
         val_data = df.iloc[val_idx].reset_index(drop=True)
@@ -203,7 +187,6 @@ def main():
             val_data,
             CFG.TRAIN_IMAGE_DIR,
             CFG.TARGET_COLS,
-            meta_cols,
             get_common_eval_transform(CFG.IMG_SIZE),
         )
         val_loader = DataLoader(
@@ -234,12 +217,10 @@ def main():
         fold_p = []
         fold_y = []
         with torch.inference_mode():
-            for batch in val_loader:
-                left, right, meta, labels = batch
+            for left, right, labels in val_loader:
                 left = left.to(device)
                 right = right.to(device)
-                meta = meta.to(device)
-                out = model(left, right, metadata=meta)
+                out = model(left, right)
                 fold_p.append(out.cpu().float().numpy())
                 fold_y.append(labels.numpy())
 
@@ -264,9 +245,9 @@ def main():
 
     summary = {
         "status": "completed",
-        "model_identifier": "B6_VMamba_Base_Mamba_Meta",
+        "model_identifier": "B9_VMamba_Base_Mamba_NoMeta",
         "backbone": CFG.MODEL_NAME,
-        "protocol": "matched dual-view, 2x Mamba fusion with 23-feature metadata, compositional output, raw target Huber",
+        "protocol": "matched dual-view, 2x Mamba fusion, compositional output, raw target Huber",
         "evaluation_protocol": "unified common evaluator: PIL RGB, INTER_LINEAR, batch 16, workers 0, full precision",
         "seed": CFG.SEED,
         "config": {
@@ -280,8 +261,6 @@ def main():
             "lr_head": CFG.LR_HEAD,
             "weight_decay": CFG.WD,
             "huber_beta": CFG.HUBER_BETA,
-            "use_metadata": True,
-            "meta_dim": int(getattr(CFG, "_META_DIM", 23)),
         },
         "fold_results": fold_details,
         "mean_fold_weighted_r2": float(np.mean([f["outer_weighted_r2"] for f in fold_details])),
@@ -307,7 +286,7 @@ def main():
     )
 
     print("\n" + "=" * 60)
-    print("B6 VMAMBA-BASE RERUN COMPLETE!")
+    print("B9 VMAMBA-BASE RERUN COMPLETE!")
     print(f"Mean Fold Weighted R²: {summary['mean_fold_weighted_r2']:.4f} ± {summary['fold_dispersion_std']:.4f}")
     print(f"Pooled OOF Weighted R²: {summary['pooled_oof_weighted_r2']:.4f}")
     print(f"Summary saved to: {summary_path}")
