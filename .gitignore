@@ -41,3 +41,7 @@ Thumbs.db
 # Cache directories.
 .cache/
 .ipynb_checkpoints/
+third_party/
+
+# Generated research reports remain local or external artifacts.
+results/
