@@ -5,6 +5,16 @@ import unittest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+LOCAL_ARTIFACT_DIRS = {
+    ".git",
+    "checkpoints",
+    "csiro-biomass",
+    "output",
+    "pretrained",
+    "results",
+    "third_party",
+    "zips",
+}
 
 
 class RepositoryPathTests(unittest.TestCase):
@@ -16,7 +26,7 @@ class RepositoryPathTests(unittest.TestCase):
                 scripts.append(path)
                 self.assertIn("parents[2] / 'src'", source, path)
 
-        self.assertEqual(len(scripts), 20)
+        self.assertEqual(len(scripts), 21)
         self.assertTrue((REPO_ROOT / "src" / "engine.py").is_file())
         self.assertTrue((REPO_ROOT / "src" / "models.py").is_file())
 
@@ -30,7 +40,9 @@ class RepositoryPathTests(unittest.TestCase):
         checked_suffixes = {".md", ".py", ".sh"}
 
         for path in REPO_ROOT.rglob("*"):
-            if ".git" in path.parts or path.suffix not in checked_suffixes:
+            if LOCAL_ARTIFACT_DIRS.intersection(path.relative_to(REPO_ROOT).parts):
+                continue
+            if path.suffix not in checked_suffixes:
                 continue
             source = path.read_text(encoding="utf-8")
             for marker in legacy_markers:
