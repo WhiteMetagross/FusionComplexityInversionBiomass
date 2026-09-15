@@ -288,7 +288,24 @@ class BiomassModelTimm(nn.Module):
         backbone_kwargs = dict(pretrained=pretrained, num_classes=0, global_pool='')
         if img_size is not None and model_name.startswith('vit_'):
             backbone_kwargs['img_size'] = img_size
-        self.backbone = timm.create_model(model_name, **backbone_kwargs)
+
+        if pretrained and model_name == 'vit_large_patch14_dinov2.lvd142m':
+            pretrained_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'pretrained')
+            local_pth = os.path.join(pretrained_dir, 'dinov2_vitl14_pretrain.pth')
+            hub_pth = os.path.expanduser('~/.cache/torch/hub/checkpoints/dinov2_vitl14_pretrain.pth')
+            pth_file = local_pth if os.path.exists(local_pth) else (hub_pth if os.path.exists(hub_pth) else None)
+            if pth_file:
+                backbone_kwargs['pretrained'] = False
+                self.backbone = timm.create_model(model_name, **backbone_kwargs)
+                sd = torch.load(pth_file, map_location='cpu')
+                if 'mask_token' in sd:
+                    del sd['mask_token']
+                self.backbone.load_state_dict(sd, strict=True)
+                print(f"Loaded {model_name} from local file: {pth_file}")
+            else:
+                self.backbone = timm.create_model(model_name, **backbone_kwargs)
+        else:
+            self.backbone = timm.create_model(model_name, **backbone_kwargs)
         self.freeze_backbone = freeze_backbone
         if freeze_backbone:
             self.backbone.requires_grad_(False)
