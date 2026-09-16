@@ -330,6 +330,24 @@ class TestClassicalBaselines(unittest.TestCase):
         )
         self.assertEqual(len(fold_metrics), 5)
 
+    def test_12_classical_pipeline_scaler_import(self):
+        """12. ClassicalPipeline instantiates and fits StandardScaler on synthetic data without NameError."""
+        pipeline = ClassicalPipeline(
+            model_type="ridge",
+            pca_components=None,
+            use_scaler=True,
+            ridge_alpha=1.0,
+            xgb_params=None,
+        )
+        rng = np.random.RandomState(42)
+        X_mock = rng.randn(10, 4)
+        y_mock = rng.randn(10, 3)
+        fitted = pipeline.fit(X_mock, y_mock)
+        self.assertIsNotNone(fitted.scaler)
+        preds = fitted.predict(X_mock)
+        self.assertEqual(preds.shape, (10, 3))
+        self.assertTrue(np.all(np.isfinite(preds)))
+
 
 if __name__ == "__main__":
     unittest.main()

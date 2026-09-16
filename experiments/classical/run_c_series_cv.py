@@ -21,6 +21,7 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import StratifiedKFold
+from sklearn.preprocessing import StandardScaler
 import xgboost as xgb
 import torch
 
