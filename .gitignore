@@ -45,3 +45,7 @@ third_party/
 
 # Generated research reports remain local or external artifacts.
 results/
+
+# Local utility and helper scripts.
+scripts/
+
