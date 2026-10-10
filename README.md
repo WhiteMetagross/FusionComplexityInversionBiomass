@@ -108,7 +108,7 @@ The B release contains 108 files and `29,848,362,599` uncompressed bytes in tota
 ## Repository structure:
 
 ```text
-FusionComplexityInversionBiomass/
+FusionComplexityPastureBiomass/
 |-- src/                         Shared neural, frozen probe, and classical code.
 |-- experiments/baselines/       B series training entry points.
 |-- experiments/ablation/        A and E series training entry points.
@@ -130,7 +130,7 @@ Large datasets, checkpoints, pretrained weights, outputs, and result caches are 
 Run commands inside WSL with the project Conda environment.
 
 ```bash
-cd /path/to/FusionComplexityInversionBiomass
+cd /path/to/FusionComplexityPastureBiomass
 conda env create -f environment.yml
 conda run --no-capture-output -n mambahar python -m unittest discover -s tests -p 'test_*.py'
 conda run --no-capture-output -n mambahar python experiments/classical/run_c_series_cv.py --models C1 C2 C3 C4 C5

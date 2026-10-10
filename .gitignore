@@ -7,6 +7,7 @@ dist/
 build/
 
 # Model checkpoints and weights (large binary files).
+checkpoints/
 *.pth
 *.pt
 *.ckpt

@@ -41,7 +41,7 @@ conda env create -f environment.yml
 If `mambahar` already exists, compare it with `environment.yml` before updating it. Do not install unreviewed packages into the validated environment.
 
 ```bash
-cd /path/to/FusionComplexityInversionBiomass
+cd /path/to/FusionComplexityPastureBiomass
 conda run --no-capture-output -n mambahar python -c "
 import sys, torch, timm, sklearn, skimage, xgboost
 print('Python:', sys.version.split()[0])
