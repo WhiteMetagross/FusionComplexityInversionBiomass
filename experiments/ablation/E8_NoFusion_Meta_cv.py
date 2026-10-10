@@ -1,12 +1,8 @@
 """
-E8: DINOv3-ViT-L + No Fusion (Identity) + Metadata — 5-Fold CV
+E8: DINOv3 ViT-L with identity addition and metadata, five fold CV.
 
-Completes the 4×2 factorial table by testing No Fusion WITH metadata.
-Combined with E4 (No Fusion, No Meta), this tests whether metadata alone
-can compensate for the absence of cross-view fusion.
-
-If E8 ≈ 0.829 → metadata ceiling is universal (independent of fusion).
-If E8 < 0.819  → metadata hurts even without fusion.
+Provides the metadata counterpart to the E4 no fusion control. The verified
+mean fold R2 is 0.8273.
 
 Usage (WSL):
     conda activate mambahar

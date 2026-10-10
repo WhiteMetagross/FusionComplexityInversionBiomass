@@ -1,13 +1,8 @@
 """
-E7: DINOv3-ViT-L + 4× GatedDepthwiseConv (doubled fusion depth) — 5-Fold CV
+E7: DINOv3 ViT-L with four gated depthwise blocks, five fold CV.
 
-Tests whether more local fusion blocks continue to help or start to overfit.
-With E4 (0×), E6 (1×), B5 (2×), and now E7 (4×), we trace a fusion depth
-curve to find the optimal number of blocks.
-
-If E7 > B5 (0.903) → deeper fusion still helps.
-If E7 < B5           → 2 blocks is optimal; overfitting begins at 4×.
-Expected: inverted-U curve peaking at 2 blocks.
+Provides the four block point in the matched fusion depth comparison. The
+verified mean fold R2 is 0.8136.
 
 Usage (WSL):
     conda activate mambahar

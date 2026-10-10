@@ -1,9 +1,8 @@
 """
-E5: DINOv3-ViT-L + Full MambaFusionBlock (expand=2) — NO Metadata — 5-Fold CV
+E5: DINOv3 ViT-L with full Mamba fusion, no metadata, five fold CV.
 
-Tests whether BioBabyMamba's bottleneck compression hurts SSM performance.
-Uses the full-capacity MambaFusionBlock (expand=2) instead of BioBabyMamba's
-bottleneck (d_model → d_model/2 → Mamba expand=1).
+Evaluates full dimension Mamba fusion with expansion factor 2 under the locked
+protocol. The verified mean fold R2 is 0.7930.
 
 VRAM note: This may OOM with bs=5 on 8GB. Uses bs=4 + grad_accum=1.
 If still OOM, reduce to bs=3 + grad_accum=2.

@@ -1,12 +1,9 @@
 """
-E4: DINOv3-ViT-L + Mean Pooling (NO Fusion) — 5-Fold CV
+E4: DINOv3 ViT-L with mean pooling, no fusion, five fold CV.
 
-Removes ALL fusion blocks. Simply concatenates left/right backbone features
-and pools directly. Tests whether ANY fusion module helps beyond baseline
-pooling of DINOv3 features.
-
-If E4 ≈ Proposed (0.903) → fusion blocks are unnecessary.
-If E4 << Proposed → even simple local fusion adds value.
+Concatenates left and right backbone features and pools them directly. This is
+the no fusion control for the DINOv3 cross view comparison. The verified mean
+fold R2 is 0.8181.
 
 Usage (WSL):
     conda activate mambahar

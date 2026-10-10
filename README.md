@@ -1,238 +1,125 @@
-# Fusion Complexity Inversion: Why Simpler Cross-View Modules Outperform SSMs and Cross-View Attention Transformers for Pasture Biomass Regression:
+# Fusion Complexity Is Not Fusion Quality: Backbone, Cross View Fusion, and Metadata as Separate Factors in Pasture Biomass Regression:
 
-**Author:** Mridankan Mandal
+**Author:** Mridankan Mandal.
 
-**Paper:** [arXiv:2603.07819](https://arxiv.org/abs/2603.07819)
-
-### The Pre-Trained Models (bundled as series A, B, E1 and E2 based on the results of the research work):
-
-- Series A: https://www.kaggle.com/models/redzapdos123/a-series-biomass-models
-- Series B: https://www.kaggle.com/models/redzapdos123/b-series-biomass-models
-- Series E1: https://www.kaggle.com/models/redzapdos123/e-series-biomass-models-1
-- Series E2: https://www.kaggle.com/models/redzapdos123/e-series-biomass-models-2
-
----
+**Paper:** [arXiv:2603.07819](https://arxiv.org/abs/2603.07819).
 
 ## Overview:
 
-Accurate estimation of pasture biomass from agricultural imagery is critical for sustainable livestock management. This repository provides the complete source code, experiment configurations, and Kaggle notebooks for the Fusion Complexity Inversion study conducted on the CSIRO Pasture Biomass benchmark.
+This repository contains training, evaluation, classical baseline, notebook, and figure generation code for pasture biomass regression on the CSIRO Image2Biomass dataset. The study treats backbone transfer, cross view fusion, and metadata as separate experimental factors under one locked five fold split and one raw scale weighted coefficient of determination.
 
-The study systematically evaluates adaptation of vision foundation models to agricultural regression through 17 configurations spanning four backbones (EfficientNet-B3 to DINOv3-ViT-L), five cross-view fusion mechanisms, and a 4x2 metadata factorial.
+The corrected evidence does not support a monotonic relation between fusion complexity and regression quality. Cross view gated attention is the strongest verified single model, while deeper convolution and full Mamba fusion are weaker. Backbone changes produce a larger observed difference than fusion depth. Metadata contains useful signal, but its effect changes with the image pathway.
 
-A counterintuitive principle, termed **Fusion Complexity Inversion**, is uncovered: on scarce agricultural data, a two-layer gated depthwise convolution (R² = 0.903) outperforms cross-view attention transformers (0.833), bidirectional SSMs (0.819), and full Mamba (0.793, which falls below the no-fusion baseline).
+## Main findings:
 
-![Architecture Diagram](img/fig_architecture.png)
+- E2, DINOv3 Large with cross view gated attention and no metadata, is the strongest verified single model at mean fold raw weighted R squared of `0.8338 +/- 0.0503`.
+- B5, DINOv3 Large with two gated depthwise convolution blocks, reaches `0.8274 +/- 0.0443`. The matched DINOv2 Large model B4 reaches `0.7902 +/- 0.0358`.
+- Fusion quality is nonmonotonic. Identity addition reaches `0.8181`, one gated depthwise block reaches `0.8213`, two blocks reach `0.8274`, four blocks reach `0.8136`, and full Mamba reaches `0.7930`.
+- Metadata is not a universal gain. Across four matched DINOv3 pathways, it reduces the score range from `0.0157` to `0.0013`, but individual changes range from `-0.0061` to `+0.0093`.
+- Classical metadata models remain strong controls. C2 metadata XGBoost reaches `0.7199 +/- 0.0289`.
+- Frozen foundation features are linearly useful. C7 frozen DINOv3 Large Ridge reaches `0.7400 +/- 0.0203`.
+- Dry Dead biomass is the hardest target across selected deep, classical, and frozen feature models.
+- Fold standard deviations describe variation across outer data partitions. Most deep configurations use one training seed, so these values are not seed uncertainty estimates.
 
----
+## Verified results:
 
-## Key Findings:
+All values below use the locked five fold split and raw scale weighted R squared. Higher is better.
 
-- **Backbone pretraining scale monotonically dominates** all architectural choices. The DINOv2 to DINOv3 upgrade alone yields +5.0 R² points.
-- **Simple local fusion outperforms complex global fusion.** A two-layer GatedDepthwiseConvBlock achieves the best performance among all tested fusion mechanisms.
-- **Metadata creates a universal ceiling** at R² approximately 0.829. Adding metadata features (species, state, and NDVI) collapses an 8.4-point fusion spread to 0.1 points.
-- **Actionable guidelines for sparse agricultural benchmarks** are established: backbone quality should be prioritized over fusion complexity, local modules are preferred over global alternatives, and features unavailable at inference time should be excluded.
+| ID | Backbone or input | Fusion or learner | Metadata | Mean fold R squared | Fold SD |
+| :--- | :--- | :--- | :---: | ---: | ---: |
+| B2 | EfficientNet B3. | Two gated depthwise blocks. | No. | 0.6949 | 0.0404 |
+| B3 | Frozen DINOv2 Base. | Supervised probe. | No. | 0.6967 | 0.0371 |
+| B4 | DINOv2 Large. | Two gated depthwise blocks. | No. | 0.7902 | 0.0358 |
+| B5 | DINOv3 Large. | Two gated depthwise blocks. | No. | 0.8274 | 0.0443 |
+| B6 | VMamba Base. | Cross scan Mamba. | Yes. | 0.7382 | 0.0408 |
+| B7 | DINOv3 Large. | Cross view gated attention. | Yes. | 0.8277 | 0.0496 |
+| B8 | DINOv3 Large. | Bidirectional Mamba. | Yes. | 0.8280 | 0.0414 |
+| B9 | VMamba Base. | Cross scan Mamba. | No. | 0.7432 | 0.0481 |
+| B10 | Frozen DINOv2 Giant. | Supervised probe. | No. | 0.7149 | 0.0600 |
+| E1 | DINOv3 Large. | Bidirectional Mamba. | No. | 0.8187 | 0.0500 |
+| **E2** | **DINOv3 Large.** | **Cross view gated attention.** | **No.** | **0.8338** | **0.0503** |
+| E3 | DINOv3 Large. | Two gated depthwise blocks. | Yes. | 0.8286 | 0.0457 |
+| E4 | DINOv3 Large. | Identity addition. | No. | 0.8181 | 0.0540 |
+| E5 | DINOv3 Large. | Full Mamba. | No. | 0.7930 | 0.0342 |
+| E6 | DINOv3 Large. | One gated depthwise block. | No. | 0.8213 | 0.0346 |
+| E7 | DINOv3 Large. | Four gated depthwise blocks. | No. | 0.8136 | 0.0392 |
+| E8 | DINOv3 Large. | Identity addition. | Yes. | 0.8273 | 0.0532 |
+| C1 | Metadata. | Ridge. | Yes. | 0.6827 | 0.0312 |
+| C2 | Metadata. | XGBoost. | Yes. | 0.7199 | 0.0289 |
+| C3 | Handcrafted image features. | Ridge. | No. | 0.3503 | 0.0817 |
+| C4 | Handcrafted image features. | XGBoost. | No. | 0.4242 | 0.0814 |
+| C5 | Handcrafted image features and metadata. | XGBoost. | Yes. | 0.6150 | 0.0527 |
+| C6 | Frozen DINOv2 Base features. | Ridge. | No. | 0.6773 | 0.0252 |
+| C7 | Frozen DINOv3 Large features. | Ridge. | No. | 0.7400 | 0.0203 |
+| C8 | Frozen DINOv3 Large features with PCA32. | XGBoost. | No. | 0.6550 | 0.0601 |
 
-![Main Results](img/fig_main_results.png)
+## Model weights:
 
----
+Kaggle model status and file inventories were checked through Kaggle CLI on 11 October 2026. All listed releases reported `READY`.
 
-## Directory Structure:
+| Series | Models | Kaggle release | Files | Uncompressed bytes |
+| :--- | :--- | :--- | ---: | ---: |
+| A | A1 and A7. | [A series](https://www.kaggle.com/models/redzapdos123/a-series-biomass-models). | 14 | 2,070,352,089 |
+| B, part 1 | B2, B3, B6, B7, and B8. | [B series, part 1](https://www.kaggle.com/models/redzapdos123/b-series-biomass-models). | 58 | 15,376,607,134 |
+| B, part 2 | B4, B5, B9, and B10. | [B series, part 2](https://www.kaggle.com/models/redzapdos123/b-series-biomass-models-2). | 50 | 14,471,755,465 |
+| C | C1 through C8. | [C series](https://www.kaggle.com/models/redzapdos123/c-series-biomass-models). | 114 | 28,751,931 |
+| E, part 1 | E1 through E4. | [E series, part 1](https://www.kaggle.com/models/redzapdos123/e-series-biomass-models). | 48 | 40,172,156,900 |
+| E, part 2 | E5 through E8. | [E series, part 2](https://www.kaggle.com/models/redzapdos123/e-series-biomass-models-2). | 44 | 24,875,081,324 |
 
-```
+The B release contains 108 files and `29,848,362,599` uncompressed bytes in total. This exactly matches the canonical local B2 through B10 artifact set. The C release also matches the local file count and byte total exactly. Required E1 through E8 best fold weights and evaluation metadata were previously downloaded and recorded with SHA256 values in the local checkpoint manifest. Extra optimizer state files stored beside model E2 in E series part 1 are not required for inference. R, S, and X series experiments are stale and are not part of this release.
+
+## Dataset and protocol:
+
+- Dataset: [CSIRO Image2Biomass](https://www.kaggle.com/competitions/csiro-image2biomass).
+- Local study subset: 357 paired pasture images with five laboratory biomass targets.
+- Split: `StratifiedGroupKFold`, five outer folds, seed 17, stratified by Dry Total quintile and grouped by image identifier.
+- Primary metric: Raw scale weighted R squared with weights `[0.1, 0.1, 0.1, 0.2, 0.5]` for Dry Green, Dry Dead, Dry Clover, Green Dry Matter, and Dry Total.
+- Output constraints: Green Dry Matter is the sum of Dry Green and Dry Clover. Dry Total is the sum of Green Dry Matter and Dry Dead.
+- Selection caveat: Outer validation folds were also used for checkpoint selection. Reported values are cross validation estimates, not untouched test results.
+
+## Repository structure:
+
+```text
 FusionComplexityInversionBiomass/
-├── README.md                       # This file.
-├── Usage.md                        # Detailed execution instructions.
-├── CodeBaseIndex.md                # File-level index of the entire codebase.
-├── LICENSE                         # CC BY-NC-SA 4.0 license.
-├── .gitignore                      # Git exclusion rules.
-├── img/                            # Paper figures and visualizations.
-│   ├── fig_architecture.png
-│   ├── fig_main_results.png
-│   ├── fig_ablation_studies.png
-│   └── ... (13 figures total)
-├── src/                            # Core source code.
-│   ├── engine.py                   # Shared training engine.
-│   ├── models.py                   # All model architectures.
-│   └── utils/
-│       ├── count_params.py         # Parameter counting utility.
-│       └── setup_deps.sh           # One-time dependency setup script.
-├── analysis/                       # Dataset analysis and visualization scripts.
-│   ├── dataset_analysis*.py        # Exploratory Data Analysis (EDA) scripts.
-│   ├── generate_tsne_figure.py     # Feature space t-SNE visualizations.
-│   └── generate_paper_figures.py   # Scripts to generate paper figures.
-├── experiments/                    # Experiment configuration scripts.
-│   ├── baselines/                  # B1-B6 baseline configurations.
-│   ├── ablation/                   # E1-E8 and A1-A6 ablation studies.
-│   └── proposed/                   # Proposed model configurations.
-└── notebooks/                      # Kaggle notebook versions.
-    ├── training/                   # 5-fold CV training notebooks.
-    │   ├── baselines/
-    │   └── ablation/
-    └── submission/                 # Inference and submission notebooks.
-        ├── baselines/
-        ├── ablation/
-        └── proposed/
+|-- src/                         Shared neural, frozen probe, and classical code.
+|-- experiments/baselines/       B series training entry points.
+|-- experiments/ablation/        A and E series training entry points.
+|-- experiments/classical/       Unified C1 through C8 runner.
+|-- experiments/evaluate_*.py    Checkpoint evaluation tools.
+|-- notebooks/                   Standalone training and evaluation notebooks.
+|-- analysis/                    Dataset, result figure, and attribution tools.
+|-- tests/                       Protocol, path, and model tests.
+|-- img/                         Historical tracked figures.
+|-- Usage.md                     Execution commands and artifact setup.
+`-- CodeBaseIndex.md             Source and experiment inventory.
 ```
 
----
+Large datasets, checkpoints, pretrained weights, outputs, and result caches are excluded from Git.
 
-## Experiments:
+## Quick start:
 
-### Baselines (B1-B6):
+Run commands inside WSL with the project Conda environment.
 
-| ID | Model | Description |
-|----|-------|-------------|
-| B1 | Median Predictor | Statistical lower bound with no learned parameters. |
-| B2 | EfficientNet-B3 | CNN baseline using timm pretrained weights. |
-| B3 | DINOv2-Giant | Zero-shot feature probing. |
-| B4 | DINOv2-Large + Fusion | ViT-L backbone with GatedDepthwiseConv fusion. |
-| B5 | DINOv3-ViT-L + Fusion | Updated Meta ViT-L with GatedDepthwiseConv fusion. |
-| B6 | VMamba-Base + Mamba SSM | VMamba-Base v2 SSM backbone with Mamba SSM fusion. |
+```bash
+cd /path/to/FusionComplexityInversionBiomass
+conda run --no-capture-output -n mambahar python -m unittest discover -s tests -p 'test_*.py'
+conda run --no-capture-output -n mambahar python experiments/classical/run_c_series_cv.py --models C1 C2 C3 C4 C5
+conda run --no-capture-output -n mambahar python experiments/evaluate_checkpoints.py --suite integrity
+```
 
-### Proposed Model Configurations:
-
-| ID | Model | Description |
-|----|-------|-------------|
-| Proposed_BabyMamba | DINOv3-ViT-L + BidirMamba | DINOv3-ViT-L backbone with weight-tied bidirectional Mamba SSM fusion. |
-| Proposed_CVGA | DINOv3-ViT-L + CVGA | DINOv3-ViT-L backbone with Cross-View Gated Attention fusion. |
-
-### Ablation Studies (E1-E8):
-
-These experiments systematically isolate the effect of each fusion mechanism and metadata on DINOv3-ViT-L.
-
-| ID | Study | Description |
-|----|-------|-------------|
-| E1 | BabyMamba (no metadata) | Bidirectional Mamba SSM fusion without metadata features. |
-| E2 | CVGA (no metadata) | Cross-View Gated Attention fusion without metadata features. |
-| E3 | GatedDWConv (with metadata) | Gated depthwise convolution fusion with metadata injection. |
-| E4 | No Fusion | Mean pooling of concatenated features, that is, no fusion module. |
-| E5 | Full Mamba (no metadata) | Full-scale Mamba SSM fusion without metadata features. |
-| E6 | Single Block | Single fusion block instead of the default two blocks. |
-| E7 | Quad Block | Four fusion blocks instead of the default two blocks. |
-| E8 | No Fusion (with metadata) | Mean pooling with metadata features injected. |
-
-### Ablation Studies (A1-A6):
-
-These experiments evaluate backbone, training, and augmentation choices using VMamba-Base.
-
-| ID | Study | Description |
-|----|-------|-------------|
-| A1 | SSM Scale | Compares VMamba-Tiny, VMamba-Small, and VMamba-Base backbone scales. |
-| A2 | Metadata | Model accuracy with and without metadata feature injection. |
-| A3 | Cross-Validation | Standard KFold compared with site-stratified group splits. |
-| A4 | Loss Function | MSE loss compared with Huber (SmoothL1) loss. |
-| A5 | TTA | Test-time augmentation impact on spatial resilience. |
-| A6 | VMamba vs DINOv2 | SSM linear scanning compared with ViT quadratic attention. |
-
----
-
-## Cross-Validation Strategy:
-
-All experiments use **Stratified Group 5-Fold CV** through `sklearn.model_selection.StratifiedGroupKFold`.
-
-- **Stratification:** Samples are binned into 5 quantiles by `Dry_Total_g` for balanced target distribution.
-- **Grouping:** Grouped by `image_id` to prevent data leakage between dual-view pairs.
-- **Seed:** Deterministic seed of 17 for reproducibility.
-
----
-
-## Dataset:
-
-The CSIRO Pasture Biomass benchmark is a 357-image dual-view dataset with laboratory-validated, component-wise ground truth for five biomass targets.
-
-The dataset is available through the [CSIRO Image2Biomass Kaggle competition](https://www.kaggle.com/competitions/csiro-image2biomass). Place it in `csiro-biomass/` at the repository root. The expected files are `csiro-biomass/train.csv` and `csiro-biomass/train/`.
-
-![Target Distributions](img/fig02_target_distributions.png)
-
----
-
-## Visualizations:
-
-### Correlation Heatmap:
-
-![Correlation Heatmap](img/fig03_correlation_heatmap.png)
-
-### NDVI, Height, and Biomass Relationships:
-
-![NDVI Height Biomass](img/fig04_ndvi_height_biomass.png)
-
-### Biomass by State:
-
-![Biomass by State](img/fig05_biomass_by_state.png)
-
-### Seasonal Dynamics:
-
-![Seasonal Dynamics](img/fig06_seasonal_dynamics.png)
-
-### Species Analysis:
-
-![Species Analysis](img/fig07_species_analysis.png)
-
-### Feature Space Analysis:
-
-![Feature Space Analysis](img/fig08_feature_space_analysis.png)
-
-### Evaluation Quality:
-
-![Evaluation Quality](img/fig09_evaluation_quality.png)
-
-### Backbone Feature Maps:
-
-![Backbone Feature Maps](img/fig11_backbone_feature_maps.png)
-
-### Ablation Studies Results:
-
-![Ablation Studies](img/fig_ablation_studies.png)
-
-### Fold Analysis:
-
-![Fold Analysis](img/fig_fold_analysis.png)
-
----
-
-## Prerequisites:
-
-### Kaggle Execution:
-- GPU-enabled kernel with Internet access for model downloads.
-- CSIRO Image2Biomass competition dataset attached.
-
-### Local Execution (WSL + conda):
-- WSL Ubuntu with conda environment `mambahar` (Python 3.11, and PyTorch 2.5.1+cu121).
-- NVIDIA GPU with CUDA support (tested on RTX 4060 Laptop with 8 GB VRAM).
-- Required packages: `mamba_ssm`, `timm`, `scikit-learn`, `pandas`, `albumentations`, and `tqdm`.
-- From the repository root, run `bash src/utils/setup_deps.sh` once to install VMamba and download pretrained weights into `pretrained/`.
-
-See [Usage.md](Usage.md) for detailed execution instructions.
-
----
-
-## Training Configuration:
-
-All experiments enforce the following default training configuration.
-
-- Seed: 17.
-- Maximum epochs: 50.
-- Early stopping patience: 10.
-- Mixed precision: fp16 through `torch.amp.autocast`.
-- Optimizer: AdamW with differential learning rates (backbone 1e-5, and head 5e-4).
-- Scheduler: Cosine annealing with linear warmup (5 epochs).
-- VMamba-based models use gradient checkpointing and gradient accumulation (effective batch size 8) to fit within 8 GB VRAM.
-
----
+See [Usage.md](Usage.md) for full commands and [CodeBaseIndex.md](CodeBaseIndex.md) for file roles.
 
 ## Citation:
 
 ```bibtex
-@article{mandal2026fusioncomplexityinversion,
-  title={Fusion Complexity Inversion: Why Simpler Cross-View Modules Outperform SSMs and Cross-View Attention Transformers for Pasture Biomass Regression},
+@article{mandal2026fusionquality,
+  title={Fusion Complexity Is Not Fusion Quality: Backbone, Cross View Fusion, and Metadata as Separate Factors in Pasture Biomass Regression},
   author={Mandal, Mridankan},
   journal={arXiv preprint arXiv:2603.07819},
   year={2026}
 }
 ```
 
----
-
 ## License:
 
-This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+This work is licensed under the [Creative Commons Attribution NonCommercial ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).

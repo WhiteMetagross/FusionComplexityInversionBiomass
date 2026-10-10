@@ -1,6 +1,6 @@
 # Notebooks Manifest:
 
-This directory contains executable Jupyter notebooks for training, evaluation, and competition submissions.
+This directory contains executable Jupyter notebooks for training, evaluation, and competition submissions associated with **Fusion Complexity Is Not Fusion Quality: Backbone, Cross View Fusion, and Metadata as Separate Factors in Pasture Biomass Regression**.
 
 ## Maintenance Policy:
 
@@ -37,8 +37,8 @@ This directory contains executable Jupyter notebooks for training, evaluation, a
 | `notebooks/training/fusion/E6_SingleBlock_cv.ipynb` | E6 | `experiments/ablation/E6_SingleBlock_cv.py` | Training / CV | `train.csv`, `train/` | None | GPU | Optional | Standalone Validated |
 | `notebooks/training/fusion/E7_QuadBlock_cv.ipynb` | E7 | `experiments/ablation/E7_QuadBlock_cv.py` | Training / CV | `train.csv`, `train/` | None | GPU | Optional | Standalone Validated |
 | `notebooks/training/fusion/E8_NoFusion_Meta_cv.ipynb` | E8 | `experiments/ablation/E8_NoFusion_Meta_cv.py` | Training / CV | `train.csv`, `train/` | None | GPU | Optional | Standalone Validated |
-| `notebooks/training/proposed/Proposed_DINOv3_ViT_L_BabyMamba_cv.ipynb` | Proposed BabyMamba | `experiments/proposed/Proposed_DINOv3_ViT_L_BabyMamba_cv.py` | Training / CV | `train.csv`, `train/` | None | GPU | Needed for weights | Standalone Validated |
-| `notebooks/training/proposed/Proposed_DINOv3_ViT_L_CVGA_cv.ipynb` | Proposed CVGA | `experiments/proposed/Proposed_DINOv3_ViT_L_CVGA_cv.py` | Training / CV | `train.csv`, `train/` | None | GPU | Needed for weights | Standalone Validated |
+| `notebooks/training/proposed/Proposed_DINOv3_ViT_L_BabyMamba_cv.ipynb` | B8, legacy path | `experiments/proposed/Proposed_DINOv3_ViT_L_BabyMamba_cv.py` | Training / CV | `train.csv`, `train/` | None | GPU | Needed for weights | Standalone Validated |
+| `notebooks/training/proposed/Proposed_DINOv3_ViT_L_CVGA_cv.ipynb` | B7, legacy path | `experiments/proposed/Proposed_DINOv3_ViT_L_CVGA_cv.py` | Training / CV | `train.csv`, `train/` | None | GPU | Needed for weights | Standalone Validated |
 | `notebooks/training/classical/C_series_cv.ipynb` | C1-C8 | `experiments/classical/run_c_series_cv.py` | Training / CV | `train.csv`, `train/` | Optional DINO cache | CPU / GPU | Offline | Standalone Validated |
 | `notebooks/evaluation/unified_checkpoint_evaluation.ipynb` | Unified Normal Eval | `experiments/evaluate_checkpoints.py` | Inference Only | `train.csv`, `train/` | Fold checkpoints | GPU / CPU | Offline | Standalone Validated |
 | `notebooks/evaluation/unified_metadata_evaluation.ipynb` | Unified Metadata Eval | `experiments/ablation/evaluate_metadata_modes.py` | Inference Only | `train.csv`, `train/` | Fold checkpoints | GPU / CPU | Offline | Standalone Validated |
@@ -53,8 +53,8 @@ This directory contains executable Jupyter notebooks for training, evaluation, a
 | `notebooks/submission/baselines/B4_DINOv2_Metadata_submission.ipynb` | DINOv2-Large | Supported and updated | No metadata model despite legacy filename. |
 | `notebooks/submission/baselines/B5_DINOv3_ViT_L_Metadata_submission.ipynb` | DINOv3-ViT-L | Supported and updated | No metadata model despite legacy filename. |
 | `notebooks/submission/baselines/B6_VMamba_Base_Metadata_submission.ipynb` | VMamba-Base | Metadata blocked by official test schema | Official test.csv lacks metadata columns. |
-| `notebooks/submission/proposed/Proposed_BabyMamba_submission.ipynb` | DINOv3 + BabyMamba | Metadata blocked by official test schema | Model trained with 23 metadata features; official test rows lack metadata. |
-| `notebooks/submission/proposed/Proposed_CVGA_submission.ipynb` | DINOv3 + CVGA | Metadata blocked by official test schema | Model trained with 23 metadata features; official test rows lack metadata. |
+| `notebooks/submission/proposed/Proposed_BabyMamba_submission.ipynb` | B8, DINOv3 + BabyMamba | Metadata blocked by official test schema | Model trained with 23 metadata features; official test rows lack metadata. |
+| `notebooks/submission/proposed/Proposed_CVGA_submission.ipynb` | B7, DINOv3 + CVGA | Metadata blocked by official test schema | Model trained with 23 metadata features; official test rows lack metadata. |
 | `notebooks/submission/ablation/ablation-a1-ssm-scale_submission.ipynb` | VMamba Scale | Historical and not a maintained reproduction path | Multi-condition ablation. |
 | `notebooks/submission/ablation/ablation-a2-metadata_submission.ipynb` | Metadata Ablation | Metadata blocked by official test schema | Metadata model branch requires missing test columns. |
 | `notebooks/submission/ablation/ablation-a3-cross-validation_submission.ipynb` | CV Strategy | Historical and not a maintained reproduction path | Training split ablation. |

@@ -1,12 +1,9 @@
 """
-E3: DINOv3-ViT-L + GatedDepthwiseConv — WITH Metadata — 5-Fold CV
+E3: DINOv3 ViT-L with GatedDepthwiseConv fusion and metadata, five fold CV.
 
-Tests whether metadata helps or hurts the simple GatedDepthwiseConv fusion.
-Completes the 2×2 factorial (fusion × metadata):
-  - GatedDWConv no-meta = 0.903 (Proposed, existing)
-  - GatedDWConv + meta  = ??? (this experiment)
-  - BabyMamba + meta    = 0.829 (existing)
-  - BabyMamba no-meta   = ??? (E1)
+Provides the matched metadata comparison for the GatedDepthwiseConv model.
+The verified mean fold R2 values are 0.8274 without metadata in B5 and 0.8286
+with metadata in E3.
 
 Usage (WSL):
     conda activate mambahar

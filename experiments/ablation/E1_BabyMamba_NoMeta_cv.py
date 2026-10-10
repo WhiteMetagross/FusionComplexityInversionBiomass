@@ -1,9 +1,8 @@
 """
-E1: DINOv3-ViT-L + BioBabyMamba Fusion — NO Metadata — 5-Fold CV
+E1: DINOv3 ViT-L with BabyMamba fusion, no metadata, five fold CV.
 
-Isolates the BioBabyMamba fusion effect by removing metadata.
-Direct comparison with Proposed (GatedDepthwiseConv, no metadata, R²=0.903).
-If E1 ≈ 0.90 → metadata was the culprit. If E1 ≈ 0.83 → fusion complexity is the issue.
+Evaluates bidirectional Mamba cross view fusion without metadata under the
+locked protocol. The verified mean fold R2 is 0.8187.
 
 Usage (WSL):
     conda activate mambahar

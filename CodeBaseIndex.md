@@ -1,6 +1,6 @@
 # Codebase Index:
 
-This document provides a component-level inventory of tracked repository source files, experiments, evaluators, notebooks, tests, and analysis tools.
+This document provides a component level inventory for **Fusion Complexity Is Not Fusion Quality: Backbone, Cross View Fusion, and Metadata as Separate Factors in Pasture Biomass Regression**.
 
 ## 1. Core source code (`src/`):
 
@@ -9,7 +9,7 @@ This document provides a component-level inventory of tracked repository source 
 - **`src/engine.py`:**
   - Purpose: Shared training engine for neural dual view cross validation experiments.
   - Key classes and functions: `load_train_data` (pivots long to wide format and partitions folds), `BiomassDataset` (dual view image dataset with optional metadata vector), `prepare_image_cache` (caches split images to local filesystem), `train_one_epoch` (mixed precision forward pass with gradient accumulation), `validate` (evaluates validation split with optional test time augmentation), `weighted_r2_score` (computes raw weighted R squared), `CompositionalHuberLoss` (weighted Huber loss on primitive predictions), and `run_cv` (full five fold cross validation orchestrator with checkpoint resume).
-  - Consumers: Neural baseline scripts (B2, B4, B5, B6, B9), ablation scripts (A1 through A6, E1 through E8), and proposed model scripts.
+  - Consumers: Neural baseline scripts (B2, B4, B5, B6, B9), ablation scripts (A1 through A7 and E1 through E8), and the legacy path scripts used to train B7 and B8.
   - Limits: Requires `train.csv` and dual view images formatted with identical height and width.
 
 - **`src/models.py`:**
@@ -66,14 +66,16 @@ This document provides a component-level inventory of tracked repository source 
 *Notes on legacy names and released checkpoints:*
 - `B3_DINOv2_Giant_cv.py` is a legacy name. The actual model is `facebook/dinov2-base` supervised probe. It is not Giant and not zero-shot.
 - `B4_DINOv2_Metadata_cv.py` and `B5_DINOv3_ViT_L_Metadata_cv.py` set `USE_METADATA = False`. They are vision only models.
-- Baselines B7 (CVGA with metadata) and B8 (BidirMamba with metadata) have released checkpoints and evaluation harness support, but do not have maintained training scripts in this repository.
+- Baselines B7 (CVGA with metadata) and B8 (BidirMamba with metadata) have released checkpoints and compatible training scripts under the legacy `experiments/proposed/` paths.
 
-### Proposed models (`experiments/proposed/`):
+### Matched metadata models with legacy paths (`experiments/proposed/`):
+
+These paths predate the corrected paper narrative. They train the B7 and B8 metadata configurations. They remain for notebook and checkpoint compatibility, not as a claim that either model is a proposed method.
 
 | Experiment ID | Script Path | Actual Model | Fusion Type | Metadata State | Action | Output Root |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Proposed BabyMamba** | `experiments/proposed/Proposed_DINOv3_ViT_L_BabyMamba_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | BidirMamba | True | Training / CV | `output/reruns_2026_09_13/Proposed_BabyMamba` |
-| **Proposed CVGA** | `experiments/proposed/Proposed_DINOv3_ViT_L_CVGA_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | CVGA | True | Training / CV | `output/reruns_2026_09_13/Proposed_CVGA` |
+| **B8** | `experiments/proposed/Proposed_DINOv3_ViT_L_BabyMamba_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | BidirMamba | True | Training / CV | `output/reruns_2026_09_13/Proposed_BabyMamba` |
+| **B7** | `experiments/proposed/Proposed_DINOv3_ViT_L_CVGA_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | CVGA | True | Training / CV | `output/reruns_2026_09_13/Proposed_CVGA` |
 
 ### Ablation studies (`experiments/ablation/`):
 
@@ -110,9 +112,9 @@ Primary metric is raw weighted R squared with weights `[0.1, 0.1, 0.1, 0.2, 0.5]
 
 ## 4. Notebooks (`notebooks/`):
 
-All notebook paths, metadata specifications, execution modes, and submission statuses are indexed in [notebooks/README.md](file:///c:/Users/Xeron/Desktop/IIIT-ACourseWork/IMLProject/FusionComplexityInversionBiomass/notebooks/README.md).
+All notebook paths, metadata specifications, execution modes, and submission statuses are indexed in [notebooks/README.md](notebooks/README.md).
 
-- **Training notebooks:** 26 complete standalone implementations covering B1-B6, B9, B10, A1-A7, E1-E8, Proposed BabyMamba, Proposed CVGA, and C series. All default to safe mode (`RUN_FULL = False`).
+- **Training notebooks:** 26 complete standalone implementations covering B1 through B10 where available, A1 through A7, E1 through E8, and C1 through C8. B7 and B8 retain legacy `proposed` paths. All default to safe mode (`RUN_FULL = False`).
 - **Evaluation notebooks:**
   - `notebooks/evaluation/unified_checkpoint_evaluation.ipynb`: Standalone normal checkpoint evaluation under strict loading.
   - `notebooks/evaluation/unified_metadata_evaluation.ipynb`: Standalone metadata mode evaluation (`present`, `zero`, `shuffled`) with matched controls.
@@ -139,6 +141,10 @@ Tracked analysis files:
 - **`analysis/generate_paper_figures.py`:** Compiles exploratory and preliminary paper figures.
 - **`analysis/export_paper_figures.py`:** Canonical exporter that generates publication ready figures matching manuscript specifications.
 - **`analysis/paper_figure_manifest.json`:** Manifest mapping figure numbers, file names, titles, and data sources.
+- **`analysis/generate_revised_results_figures.py`:** Generates corrected B, C, and E result figures from audited aggregate and fold metric files.
+- **`analysis/generate_model_attributions.py`:** Generates target specific positive gradient times activation sensitivity maps from B4 and B5 checkpoints.
+- **`analysis/revise_architecture_asset.py`:** Applies narrow evidence corrections to the canonical architecture asset.
+- **`analysis/validate_new_paper_figures.py`:** Checks revised paper figures for expected files, dimensions, and stale visible claims.
 
 ## 7. Local and external artifacts:
 
@@ -152,6 +158,16 @@ The following directories are excluded from Git version control:
 - `zips/`: Packaged archives for distribution.
 
 These directories must be acquired, created, or downloaded locally.
+
+External model releases:
+
+- [B series, part 1](https://www.kaggle.com/models/redzapdos123/b-series-biomass-models): B2, B3, B6, B7, and B8.
+- [B series, part 2](https://www.kaggle.com/models/redzapdos123/b-series-biomass-models-2): B4, B5, B9, and B10.
+- [C series](https://www.kaggle.com/models/redzapdos123/c-series-biomass-models): C1 through C8.
+- [E series, part 1](https://www.kaggle.com/models/redzapdos123/e-series-biomass-models-1): E1 through E4.
+- [E series, part 2](https://www.kaggle.com/models/redzapdos123/e-series-biomass-models-2): E5 through E8.
+
+R, S, and X series code and artifacts are stale research branches. They are not maintained release paths and are excluded from this index.
 
 ## 8. Known limitations:
 

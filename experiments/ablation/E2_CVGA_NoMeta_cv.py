@@ -1,9 +1,8 @@
 """
-E2: DINOv3-ViT-L + CVGA Fusion — NO Metadata — 5-Fold CV
+E2: DINOv3 ViT-L with CVGA fusion, no metadata, five fold CV.
 
-Isolates the CVGA (cross-view gated attention) fusion effect by removing metadata.
-Direct comparison with Proposed (GatedDepthwiseConv, no metadata, R²=0.903).
-Confirms E1 result isn't SSM-specific — tests attention-based fusion without metadata.
+Evaluates cross view gated attention without metadata under the locked protocol.
+The verified mean fold R2 is 0.8338, the strongest verified single model result.
 
 Usage (WSL):
     conda activate mambahar

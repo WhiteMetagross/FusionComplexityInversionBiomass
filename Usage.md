@@ -1,18 +1,18 @@
 # Usage Instructions:
 
-This document describes how to execute experiments, evaluations, and notebooks locally inside WSL and on Kaggle.
+This document describes how to reproduce experiments for **Fusion Complexity Is Not Fusion Quality: Backbone, Cross View Fusion, and Metadata as Separate Factors in Pasture Biomass Regression** locally inside WSL and on Kaggle.
 
 ## Scope:
 
 Python experiment files under `experiments/` and source modules under `src/` provide the canonical reference implementation. Notebooks under `notebooks/` contain complete standalone training or evaluation code for Kaggle and local interactive sessions without importing repository source modules.
 
-To control drift between reference scripts and standalone notebooks, every training notebook records source parity metadata:
+To expose drift between reference scripts and standalone notebooks, every training notebook records source parity metadata:
 - Matching reference script path.
-- Reference Git commit hash (`fc6f5e3`).
+- Historical reference Git commit hash.
 - SHA256 digest of the reference Python script.
 - Protocol version and model configuration constants.
 
-Static parity between notebook metadata and reference scripts is enforced by `tests/test_notebooks.py`.
+Static notebook structure, metadata presence, and path integrity are checked by `tests/test_notebooks.py`. The recorded digest identifies the source version used to create each standalone notebook. It does not assert parity with later source edits.
 
 ## Supported execution contexts:
 
@@ -33,7 +33,7 @@ Static parity between notebook metadata and reference scripts is enforced by `te
 Run all research commands inside WSL using the project Conda environment `mambahar`. Never use the Conda `base` environment, Windows Python, or global `pip`.
 
 ```bash
-cd /mnt/c/Users/Xeron/Desktop/IIIT-ACourseWork/IMLProject/FusionComplexityInversionBiomass
+cd /path/to/FusionComplexityInversionBiomass
 conda run --no-capture-output -n mambahar python -c "
 import sys, torch, timm, sklearn, skimage, xgboost
 print('Python:', sys.version.split()[0])
@@ -49,7 +49,7 @@ print('XGBoost:', xgboost.__version__)
 "
 ```
 
-### Validated local snapshot (verified 2026-09-16):
+### Validated local snapshot (verified 2026-10-11):
 - Python: 3.11.15.
 - PyTorch: 2.9.1+cu130.
 - CUDA runtime: 13.0.
@@ -61,6 +61,26 @@ print('XGBoost:', xgboost.__version__)
 - XGBoost: 3.2.0.
 
 The script `src/utils/setup_deps.sh` installs floating dependencies and copies `vmamba.py` into the environment. It is a setup helper, not a locked dependency specification.
+
+## Model artifact setup:
+
+Verified releases are available from Kaggle:
+
+- [B series, part 1](https://www.kaggle.com/models/redzapdos123/b-series-biomass-models).
+- [B series, part 2](https://www.kaggle.com/models/redzapdos123/b-series-biomass-models-2).
+- [C series](https://www.kaggle.com/models/redzapdos123/c-series-biomass-models).
+- [E series, part 1](https://www.kaggle.com/models/redzapdos123/e-series-biomass-models).
+- [E series, part 2](https://www.kaggle.com/models/redzapdos123/e-series-biomass-models-2).
+- [A series](https://www.kaggle.com/models/redzapdos123/a-series-biomass-models).
+
+Use the Kaggle CLI to inspect a release before downloading it. Keep the original model directory structure because evaluation scripts discover fold files by path.
+
+```bash
+kaggle models instances versions files redzapdos123/b-series-biomass-models/pyTorch/default/2
+kaggle models instances versions files redzapdos123/c-series-biomass-models/scikitLearn/default/1
+```
+
+R, S, and X series experiments are stale. They are excluded from the paper result set and are not maintained reproduction targets.
 
 ## Dataset setup:
 
@@ -155,8 +175,8 @@ Execute maintained reference neural training experiments using `conda run`:
 | **E6** | `experiments/ablation/E6_SingleBlock_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | SingleBlock | False | GPU | `output/reruns_2026_09_13/E6_SingleBlock` |
 | **E7** | `experiments/ablation/E7_QuadBlock_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | QuadBlock | False | GPU | `output/reruns_2026_09_13/E7_QuadBlock` |
 | **E8** | `experiments/ablation/E8_NoFusion_Meta_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | NoFusion | True | GPU | `output/reruns_2026_09_13/E8_NoFusion_Meta` |
-| **Proposed BabyMamba** | `experiments/proposed/Proposed_DINOv3_ViT_L_BabyMamba_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | BidirMamba | True | GPU | `output/reruns_2026_09_13/Proposed_BabyMamba` |
-| **Proposed CVGA** | `experiments/proposed/Proposed_DINOv3_ViT_L_CVGA_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | CVGA | True | GPU | `output/reruns_2026_09_13/Proposed_CVGA` |
+| **B8, legacy path** | `experiments/proposed/Proposed_DINOv3_ViT_L_BabyMamba_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | BidirMamba | True | GPU | `output/reruns_2026_09_13/Proposed_BabyMamba` |
+| **B7, legacy path** | `experiments/proposed/Proposed_DINOv3_ViT_L_CVGA_cv.py` | `vit_large_patch16_dinov3.lvd1689m` | CVGA | True | GPU | `output/reruns_2026_09_13/Proposed_CVGA` |
 
 Example command to launch training:
 
@@ -232,7 +252,7 @@ RUN_FULL = False
 - Safe mode (`RUN_FULL = False`): Validates local paths, package imports, configuration parameters, and execution devices. Does not download large foundation backbones, train weights, or overwrite checkpoints.
 - Full mode (`RUN_FULL = True`): Executes complete training loops inside the notebook and writes artifacts below `output/`. Does not delegate execution to external experiment scripts.
 
-Repository and data discovery inside notebooks checks candidate roots automatically (`REPO_ROOT`, `/kaggle/working`, and sibling directories). For full notebook details, see the manifest in [notebooks/README.md](file:///c:/Users/Xeron/Desktop/IIIT-ACourseWork/IMLProject/FusionComplexityInversionBiomass/notebooks/README.md).
+Repository and data discovery inside notebooks checks candidate roots automatically (`REPO_ROOT`, `/kaggle/working`, and sibling directories). For full notebook details, see the manifest in [notebooks/README.md](notebooks/README.md).
 
 ## Submission limitations:
 
@@ -240,7 +260,7 @@ The official Kaggle test CSV (`test.csv`) contains only `sample_id`, `image_path
 
 Consequently:
 - Vision only models (B1, B2, B4, B5) generate valid Kaggle test submissions directly from test images.
-- Models trained with metadata (B6, Proposed BabyMamba, Proposed CVGA, A2, C1, C2, C5) are metadata blocked by the official competition schema.
+- Models trained with metadata (B6, B7, B8, A2, C1, C2, C5) are metadata blocked by the official competition schema.
 - Submission notebooks for metadata trained models include fail fast checks that halt execution early with a descriptive error. Do not invent synthetic metadata or fill zeroes silently for competition submissions.
 
 ## Outputs and provenance:

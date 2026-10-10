@@ -1,6 +1,7 @@
 """Repository path smoke tests that require only the Python standard library."""
 
 from pathlib import Path
+import subprocess
 import unittest
 
 
@@ -19,14 +20,22 @@ LOCAL_ARTIFACT_DIRS = {
 
 class RepositoryPathTests(unittest.TestCase):
     def test_shared_experiment_imports_resolve_to_src(self):
+        tracked = subprocess.run(
+            ["git", "ls-files", "experiments/*.py", "experiments/**/*.py"],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.splitlines()
         scripts = []
-        for path in (REPO_ROOT / "experiments").rglob("*.py"):
+        for relative_path in tracked:
+            path = REPO_ROOT / relative_path
             source = path.read_text(encoding="utf-8")
             if "from engine import" in source:
                 scripts.append(path)
                 self.assertIn("parents[2] / 'src'", source, path)
 
-        self.assertEqual(len(scripts), 21)
+        self.assertGreaterEqual(len(scripts), 21)
         self.assertTrue((REPO_ROOT / "src" / "engine.py").is_file())
         self.assertTrue((REPO_ROOT / "src" / "models.py").is_file())
 

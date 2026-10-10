@@ -1,9 +1,8 @@
 """
-E6: DINOv3-ViT-L + 1× GatedDepthwiseConv (halved fusion depth) — 5-Fold CV
+E6: DINOv3 ViT-L with one gated depthwise block, five fold CV.
 
-Tests whether 2 fusion blocks is overkill. If 1 block ≈ 2 blocks (0.903),
-it shows even less fusion is sufficient. If 1 block < 2 blocks, it justifies
-the 2-block design.
+Provides the one block point in the matched fusion depth comparison. The
+verified mean fold R2 is 0.8213.
 
 Usage (WSL):
     conda activate mambahar
