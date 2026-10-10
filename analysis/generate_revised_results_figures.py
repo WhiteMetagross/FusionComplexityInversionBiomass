@@ -17,8 +17,7 @@ import seaborn as sns
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-WORKSPACE_ROOT = REPO_ROOT.parent
-OUT_ROOT = WORKSPACE_ROOT / "newPaper" / "img"
+OUT_ROOT = REPO_ROOT / "img"
 PNG_DIR = OUT_ROOT / "png"
 SVG_DIR = OUT_ROOT / "svg"
 

@@ -8,8 +8,8 @@ from xml.etree import ElementTree as ET
 from PIL import Image
 
 
-WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
-FIGURE_ROOT = WORKSPACE_ROOT / "newPaper" / "img"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+FIGURE_ROOT = REPO_ROOT / "img"
 FORBIDDEN_VISIBLE_TEXT = ("r1", "x1", "proposed", "0.903", "complexity inversion")
 
 

@@ -38,10 +38,12 @@ def load_manifest() -> list[dict[str, object]]:
 def verify_assets(asset_dir: Path) -> list[dict[str, object]]:
     failures: list[str] = []
     figures = load_manifest()
+    png_dir = asset_dir / "png"
+    svg_dir = asset_dir / "svg"
     for figure in figures:
         name = str(figure["name"])
-        png = asset_dir / f"{name}.png"
-        svg = asset_dir / f"{name}.svg"
+        png = png_dir / f"{name}.png"
+        svg = svg_dir / f"{name}.svg"
         for path in (png, svg):
             if not path.is_file():
                 failures.append(f"Missing: {path}")
@@ -69,8 +71,8 @@ def export_assets(asset_dir: Path, output_dir: Path) -> None:
     svg_dir.mkdir(parents=True, exist_ok=True)
     for figure in figures:
         name = str(figure["name"])
-        shutil.copyfile(asset_dir / f"{name}.png", png_dir / f"{name}.png")
-        shutil.copyfile(asset_dir / f"{name}.svg", svg_dir / f"{name}.svg")
+        shutil.copyfile(asset_dir / "png" / f"{name}.png", png_dir / f"{name}.png")
+        shutil.copyfile(asset_dir / "svg" / f"{name}.svg", svg_dir / f"{name}.svg")
     verify_assets_in_split_output(figures, png_dir, svg_dir)
     print(f"Verified and exported {len(figures)} exact PNG and SVG figure pairs to {output_dir}")
 

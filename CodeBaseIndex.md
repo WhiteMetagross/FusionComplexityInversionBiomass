@@ -46,7 +46,7 @@ This document provides a component level inventory for **Fusion Complexity Is No
 
 - **`src/utils/setup_deps.sh`:**
   - Purpose: Convenience shell script to download VMamba weights into `pretrained/` and install `vmamba.py` into the environment.
-  - Limits: Installs unpinned floating packages. It is not an environment lock file.
+  - Limits: Installs floating helper packages. Use the pinned root `environment.yml` for the validated research environment.
 
 ## 2. Experiment entry points (`experiments/`):
 
@@ -139,8 +139,8 @@ Tracked analysis files:
 - **`analysis/extract_feature_maps.py`:** Feature map visualization utilities for DINOv2 and VMamba backbones.
 - **`analysis/generate_architecture_diagram.py`:** Architectural diagram generator.
 - **`analysis/generate_paper_figures.py`:** Compiles exploratory and preliminary paper figures.
-- **`analysis/export_paper_figures.py`:** Canonical exporter that generates publication ready figures matching manuscript specifications.
-- **`analysis/paper_figure_manifest.json`:** Manifest mapping figure numbers, file names, titles, and data sources.
+- **`analysis/export_paper_figures.py`:** Verifies and exports the corrected PNG and SVG assets from `img/png/` and `img/svg/`.
+- **`analysis/paper_figure_manifest.json`:** SHA256 and dimension manifest for the 12 corrected figure pairs.
 - **`analysis/generate_revised_results_figures.py`:** Generates corrected B, C, and E result figures from audited aggregate and fold metric files.
 - **`analysis/generate_model_attributions.py`:** Generates target specific positive gradient times activation sensitivity maps from B4 and B5 checkpoints.
 - **`analysis/revise_architecture_asset.py`:** Applies narrow evidence corrections to the canonical architecture asset.

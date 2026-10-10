@@ -1,0 +1,36 @@
+name: mambahar
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11.15
+  - pip=26.1.2
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu130
+      - torch==2.9.1+cu130
+      - torchvision==0.24.1+cu130
+      - timm==1.0.29
+      - transformers==5.5.4
+      - huggingface-hub==1.11.0
+      - safetensors==0.7.0
+      - numpy==2.4.4
+      - pandas==2.3.3
+      - scipy==1.17.1
+      - scikit-learn==1.8.0
+      - scikit-image==0.26.0
+      - xgboost==3.2.0
+      - joblib==1.5.3
+      - albumentations==2.0.8
+      - opencv-python-headless==4.13.0.92
+      - Pillow==12.1.1
+      - matplotlib==3.10.8
+      - seaborn==0.13.2
+      - tqdm==4.67.3
+      - einops==0.8.2
+      - mamba-ssm==2.3.2.post1
+      - causal-conv1d==1.6.2.post1
+      - lxml==6.1.0
+      - ipykernel==7.2.0
+      - nbformat==5.10.4
+      - pytest==9.0.3
+      - kaggle==2.2.4

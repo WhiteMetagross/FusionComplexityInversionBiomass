@@ -21,6 +21,34 @@ The corrected evidence does not support a monotonic relation between fusion comp
 - Dry Dead biomass is the hardest target across selected deep, classical, and frozen feature models.
 - Fold standard deviations describe variation across outer data partitions. Most deep configurations use one training seed, so these values are not seed uncertainty estimates.
 
+## Paper visuals:
+
+### Architecture and tested fusion modules:
+
+![Dual view biomass regression architecture and fusion modules](img/png/fig01_architecture.png)
+
+### Model attribution examples:
+
+![Target specific model attribution maps](img/png/fig02_model_attributions.png)
+
+### Verified model and classical baseline comparison:
+
+![Verified model and classical baseline comparison](img/png/fig03_benchmark_overview.png)
+
+### Fusion and metadata analysis:
+
+![Fusion depth, fusion family, and metadata comparisons](img/png/fig04_fusion_metadata.png)
+
+### Fold stability:
+
+![Five fold stability comparison](img/png/fig05_fold_stability.png)
+
+### Target level performance:
+
+![Target level performance across selected models](img/png/fig06_target_performance.png)
+
+Matching vector assets and six dataset analysis figures are available under [`img/svg`](img/svg) and [`img/png`](img/png).
+
 ## Verified results:
 
 All values below use the locked five fold split and raw scale weighted R squared. Higher is better.
@@ -89,7 +117,8 @@ FusionComplexityInversionBiomass/
 |-- notebooks/                   Standalone training and evaluation notebooks.
 |-- analysis/                    Dataset, result figure, and attribution tools.
 |-- tests/                       Protocol, path, and model tests.
-|-- img/                         Historical tracked figures.
+|-- img/png/                     Corrected raster paper figures.
+|-- img/svg/                     Matching vector paper figures.
 |-- Usage.md                     Execution commands and artifact setup.
 `-- CodeBaseIndex.md             Source and experiment inventory.
 ```
@@ -102,10 +131,13 @@ Run commands inside WSL with the project Conda environment.
 
 ```bash
 cd /path/to/FusionComplexityInversionBiomass
+conda env create -f environment.yml
 conda run --no-capture-output -n mambahar python -m unittest discover -s tests -p 'test_*.py'
 conda run --no-capture-output -n mambahar python experiments/classical/run_c_series_cv.py --models C1 C2 C3 C4 C5
 conda run --no-capture-output -n mambahar python experiments/evaluate_checkpoints.py --suite integrity
 ```
+
+The pinned environment records the verified WSL Python and direct package versions. It targets PyTorch 2.9.1 with CUDA 13.0 wheels. The validated machine used NVIDIA driver 581.57 and an RTX 4060 Laptop GPU.
 
 See [Usage.md](Usage.md) for full commands and [CodeBaseIndex.md](CodeBaseIndex.md) for file roles.
 

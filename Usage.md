@@ -30,7 +30,15 @@ Static notebook structure, metadata presence, and path integrity are checked by 
 
 ## Clone and environment check:
 
-Run all research commands inside WSL using the project Conda environment `mambahar`. Never use the Conda `base` environment, Windows Python, or global `pip`.
+Run all research commands inside WSL using the pinned project Conda environment `mambahar`. Never use the Conda `base` environment, Windows Python, or global `pip`.
+
+Create the environment from the repository specification:
+
+```bash
+conda env create -f environment.yml
+```
+
+If `mambahar` already exists, compare it with `environment.yml` before updating it. Do not install unreviewed packages into the validated environment.
 
 ```bash
 cd /path/to/FusionComplexityInversionBiomass

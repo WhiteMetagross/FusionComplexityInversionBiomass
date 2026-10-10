@@ -145,13 +145,13 @@ def revise_raster(canonical_png: Path, rendered_png: Path, destination_png: Path
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", type=Path, default=REPO_ROOT / "img" / "fig_architecture.svg")
+    parser.add_argument("--source", type=Path, required=True)
     parser.add_argument(
         "--output",
         type=Path,
-        default=WORKSPACE_ROOT / "newPaper" / "img" / "svg" / "fig01_architecture.svg",
+        default=REPO_ROOT / "img" / "svg" / "fig01_architecture.svg",
     )
-    parser.add_argument("--canonical-png", type=Path, default=REPO_ROOT / "img" / "fig_architecture.png")
+    parser.add_argument("--canonical-png", type=Path, required=True)
     parser.add_argument(
         "--rendered-png",
         type=Path,
@@ -160,7 +160,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-png",
         type=Path,
-        default=WORKSPACE_ROOT / "newPaper" / "img" / "png" / "fig01_architecture.png",
+        default=REPO_ROOT / "img" / "png" / "fig01_architecture.png",
     )
     parser.add_argument("--skip-png", action="store_true")
     return parser.parse_args()
