@@ -48,6 +48,7 @@ The corrected evidence does not support a monotonic relation between fusion comp
 ![Target level performance across selected models](img/png/fig06_target_performance.png)
 
 Matching vector assets and six dataset analysis figures are available under [`img/svg`](img/svg) and [`img/png`](img/png).
+One generation entry point for each main and appendix figure is available under [`img/codes`](img/codes).
 
 ## Verified results:
 
@@ -119,6 +120,7 @@ FusionComplexityPastureBiomass/
 |-- tests/                       Protocol, path, and model tests.
 |-- img/png/                     Corrected raster paper figures.
 |-- img/svg/                     Matching vector paper figures.
+|-- img/codes/                   One generation entry point per figure.
 |-- Usage.md                     Execution commands and artifact setup.
 `-- CodeBaseIndex.md             Source and experiment inventory.
 ```
